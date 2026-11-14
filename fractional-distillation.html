@@ -1,0 +1,2128 @@
+<title>Fractional Distillation Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;700&family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Thai+Looped:wght@400;500;600&family=Lexend:wght@400;500;600&display=swap">
+<style>
+/* Layout: a lab bench. The tower diagram sits on the left (sticky on wide screens); controls, the molecule tracker and the 4 steps sit on the right. Reference sections stack below. Thai glyphs fall through each Latin face to a matching Thai face. */
+:root{
+  --bg:#edf1f2; --surface:#ffffff; --surface-2:#e3e9eb; --ink:#13202a; --ink-soft:#4a5a65; --line:#c8d2d7;
+  --accent:#c4420c; --accent-ink:#ffffff; --accent-soft:#fde4d6; --accent-text:#9a3309;
+  --hot:#e8590c; --cool:#1f84c9; --cool-soft:#dcecf8; --cool-text:#0f5a8e; --focus:#1f84c9;
+  --good:#2b8a3e; --good-soft:#dcf2e1; --bad:#c92a2a; --bad-soft:#fde2e2;
+  --steel:#a3b1b9; --steel-dark:#5b6b75; --pipe-hi:#dbe3e7; --furnace:#34414a; --firebox:#140d08; --crude:#1c1611; --on-dark:#ffffff;
+  --col-cool:#e6f2fa; --col-hot:#ffcfb0; --stage-hi:#f8fafb; --stage-lo:#d4dde2; --flame-a:#ff7a1a; --flame-b:#ffd166;
+  --f-gas:#8ec5e6; --f-petrol:#f2cf3d; --f-naphtha:#eea83a; --f-kerosene:#df7b26; --f-diesel:#b4541c; --f-fueloil:#7c3a17; --f-bitumen:#2b1c14;
+  --bead-stroke:rgba(19,32,42,.55);
+  --font-display:"Bricolage Grotesque","Anuphan","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --font-body:"Lexend","IBM Plex Sans Thai Looped","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-mono:"IBM Plex Mono","IBM Plex Sans Thai Looped",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1518; --surface:#162126; --surface-2:#1f2c32; --ink:#e7eef1; --ink-soft:#a0b0b9; --line:#2d3c43;
+    --accent:#ff7b3a; --accent-ink:#1a0d06; --accent-soft:#3b2216; --accent-text:#ffb48e;
+    --hot:#ff7b3a; --cool:#4fb0ef; --cool-soft:#12283a; --cool-text:#94d0f6; --focus:#4fb0ef;
+    --good:#69db7c; --good-soft:#163222; --bad:#ff8787; --bad-soft:#3a1a1a;
+    --steel:#4c5d67; --steel-dark:#8a9ba5; --pipe-hi:#6b7d87; --furnace:#253037;
+    --col-cool:#132a37; --col-hot:#4a2512; --stage-hi:#283b46; --stage-lo:#0c1316;
+    --f-gas:#a5d8f5; --f-petrol:#f6da62; --f-naphtha:#f3b553; --f-kerosene:#ea8d40; --f-diesel:#cc6c35; --f-fueloil:#a45a33; --f-bitumen:#5b4132;
+    --bead-stroke:rgba(231,238,241,.5);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1518; --surface:#162126; --surface-2:#1f2c32; --ink:#e7eef1; --ink-soft:#a0b0b9; --line:#2d3c43;
+  --accent:#ff7b3a; --accent-ink:#1a0d06; --accent-soft:#3b2216; --accent-text:#ffb48e;
+  --hot:#ff7b3a; --cool:#4fb0ef; --cool-soft:#12283a; --cool-text:#94d0f6; --focus:#4fb0ef;
+  --good:#69db7c; --good-soft:#163222; --bad:#ff8787; --bad-soft:#3a1a1a;
+  --steel:#4c5d67; --steel-dark:#8a9ba5; --pipe-hi:#6b7d87; --furnace:#253037;
+  --col-cool:#132a37; --col-hot:#4a2512; --stage-hi:#283b46; --stage-lo:#0c1316;
+  --f-gas:#a5d8f5; --f-petrol:#f6da62; --f-naphtha:#f3b553; --f-kerosene:#ea8d40; --f-diesel:#cc6c35; --f-fueloil:#a45a33; --f-bitumen:#5b4132;
+  --bead-stroke:rgba(231,238,241,.5);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 56px}
+h1,h2,h3{font-family:var(--font-display);line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,1.1rem + 3.4vw,3.35rem);font-weight:800;letter-spacing:-.02em;max-width:20ch}
+h2{font-size:clamp(1.4rem,1.1rem + 1.1vw,1.85rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.12rem;font-weight:700}
+p{margin:0}
+.kicker{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--accent-text)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* Thai needs taller lines for stacked vowels and tone marks, and no tracking */
+html[lang="th"] body{line-height:1.8}
+html[lang="th"] h1,html[lang="th"] h2,html[lang="th"] h3{line-height:1.38;letter-spacing:0}
+html[lang="th"] h1{max-width:24ch}
+html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[lang="th"] .facts dt,html[lang="th"] .f-nums dt{letter-spacing:0}
+
+/* header + language switch */
+.intro{display:grid;gap:12px;padding-block:0 26px}
+.topbar{display:flex;justify-content:flex-end}
+.lang{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.lang button{font:600 .9rem/1.2 var(--font-body);padding:7px 16px;border-radius:999px;border:0;background:transparent;color:var(--ink-soft);cursor:pointer;min-height:38px}
+.lang button:hover{color:var(--ink)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.lede{font-size:1.12rem;max-width:62ch;color:var(--ink-soft)}
+.lede strong{color:var(--ink);font-weight:600}
+
+/* lab grid */
+.lab{display:grid;gap:18px;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);grid-template-rows:auto auto 1fr;grid-template-areas:"sim controls" "sim info" "sim steps";align-items:start}
+.controls{grid-area:controls}.sim-card{grid-area:sim}.info{grid-area:info}.steps{grid-area:steps}
+@media (min-width:901px){.sim-card{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}}
+@media (max-width:900px){.lab{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:"controls" "sim" "info" "steps"}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.card-h{font-size:1.45rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* buttons */
+.btn{font:600 .95rem/1.2 var(--font-body);padding:10px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.btn:hover{border-color:var(--ink-soft)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{border-color:var(--accent);filter:brightness(1.07)}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px}
+.link-btn{background:none;border:0;padding:4px 0;font:500 .9rem var(--font-body);color:var(--cool-text);cursor:pointer;text-decoration:underline;text-underline-offset:3px;justify-self:start}
+
+/* controls */
+.controls{display:grid;gap:14px}
+.heat{display:grid;gap:6px}
+.heat-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.heat-head label{font-family:var(--font-display);font-weight:700;font-size:1.15rem}
+.heat-head small{display:block;font-family:var(--font-body);font-weight:400;font-size:.85rem;color:var(--ink-soft)}
+#heatOut{font-family:var(--font-mono);font-weight:600;font-size:2.1rem;line-height:1;font-variant-numeric:tabular-nums;color:var(--hot);color:color-mix(in srgb,var(--hot) var(--p,100%),var(--cool))}
+#heat{-webkit-appearance:none;appearance:none;width:100%;height:14px;border-radius:999px;background:linear-gradient(90deg,var(--cool),var(--hot));margin:10px 0 2px;cursor:pointer}
+#heat::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:30px;height:30px;border-radius:50%;background:var(--surface);border:3px solid var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+#heat::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--surface);border:3px solid var(--ink)}
+#heat:focus-visible{outline-offset:6px}
+.heat-scale{display:flex;justify-content:space-between;gap:8px;font-family:var(--font-mono);font-size:.78rem;color:var(--ink-soft)}
+
+/* simulation card */
+.sim-card{padding:0;overflow:hidden}
+.caption{display:flex;gap:10px;align-items:flex-start;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2);font-size:.95rem;min-height:4.4em}
+.caption .dot{flex:none;width:10px;height:10px;border-radius:50%;margin-top:.5em;background:var(--hot)}
+.caption.is-follow .dot{background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.caption b{font-weight:600}
+#sim{display:block;width:100%;height:auto;max-height:min(80vh,820px);padding:8px 4px 0;touch-action:manipulation}
+.sim-legend{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;padding:10px 16px 14px;font-size:.85rem;color:var(--ink-soft);border-top:1px solid var(--line)}
+.sim-legend > span{display:inline-flex;align-items:center;gap:6px}
+.sim-legend svg{width:auto;height:14px}
+
+/* svg pieces */
+#sim text{font-family:var(--font-body);fill:var(--ink)}
+#sim .part-label{font-family:var(--font-display);font-weight:700;font-size:14px}
+.leader{stroke:var(--ink-soft);stroke-width:1;fill:none}
+.pipe{fill:none;stroke:var(--steel);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.pipe-in{fill:none;stroke:var(--pipe-hi);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.col-body{fill:var(--col-cool);stroke:var(--steel-dark);stroke-width:3}
+.col-heat{fill:url(#gHeat);transition:opacity .4s}
+.tray{stroke:var(--steel-dark);stroke-width:4;stroke-dasharray:15 6}
+.pool{fill:var(--f-bitumen)}
+.thermo{fill:url(#gThermo);stroke:var(--steel-dark);stroke-width:1}
+.tick{stroke:var(--ink-soft);stroke-width:1.5}
+#sim .t-label{font-family:var(--font-mono);font-size:14px;font-weight:600}
+#sim .t-note{font-size:11px;fill:var(--ink-soft)}
+.crude{fill:var(--crude);stroke:var(--steel-dark);stroke-width:2}
+.furnace{fill:var(--furnace)}
+.firebox{fill:var(--firebox)}
+#sim .furnace-read{font-family:var(--font-mono);font-weight:600;font-size:17px;fill:var(--on-dark)}
+.fl-a{fill:var(--flame-a)}.fl-b{fill:var(--flame-b)}
+.flicker path{transform-box:fill-box;transform-origin:50% 100%;animation:flick .45s ease-in-out infinite alternate}
+.flicker g:nth-child(2) path{animation-delay:-.2s}.flicker g:nth-child(3) path{animation-delay:-.33s}
+@keyframes flick{from{transform:scaleY(1)}to{transform:scaleY(.8) scaleX(1.06)}}
+.tank{fill:var(--surface);stroke:var(--steel-dark);stroke-width:2}
+.tank-liquid{fill:var(--fc);transition:y .4s,height .4s}
+#sim .o-name{font-family:var(--font-display);font-weight:700;font-size:16px}
+#sim .o-use{font-size:12.5px;fill:var(--ink-soft)}
+.outlet{cursor:pointer}
+.outlet:focus{outline:none}
+.hit{fill:transparent;stroke:transparent;stroke-width:1.5}
+.outlet:hover .hit{fill:var(--surface-2)}
+.outlet:focus-visible .hit{stroke:var(--focus);stroke-width:2.5}
+.outlet.is-selected .hit{fill:var(--accent-soft);stroke:var(--accent)}
+[data-part].lit{animation:lit 1.4s ease-in-out infinite}
+@keyframes lit{0%,100%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 7px var(--accent))}}
+
+/* molecules (sim + elsewhere) */
+.f-gas{--fc:var(--f-gas)}.f-petrol{--fc:var(--f-petrol)}.f-naphtha{--fc:var(--f-naphtha)}.f-kerosene{--fc:var(--f-kerosene)}.f-diesel{--fc:var(--f-diesel)}.f-fueloil{--fc:var(--f-fueloil)}.f-bitumen{--fc:var(--f-bitumen)}.f-neutral{--fc:var(--steel)}
+.bead{fill:var(--fc);stroke:var(--bead-stroke);stroke-width:.5}
+.bond{fill:none;stroke:var(--ink-soft);stroke-width:.9}
+.drop{fill:var(--fc);stroke:var(--bead-stroke);stroke-width:.6}
+#sim.following .mol:not(.is-followed){opacity:.28}
+.ring{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-dasharray:5 3}
+.is-off{display:none}
+.chain-svg{display:block;max-width:100%;height:auto}
+.chain-svg .bead{stroke-width:1}
+.chain-svg .bond{stroke-width:2}
+.sw{flex:none;display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--fc);box-shadow:inset 0 0 0 1px var(--bead-stroke)}
+.sw-lg{width:22px;height:22px}
+
+/* info card */
+.info{display:grid;gap:14px}
+.info p{max-width:60ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;gap:8px;align-items:center;padding:7px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font:500 .9rem var(--font-body);color:var(--ink);cursor:pointer;min-height:40px}
+.chip:hover{border-color:var(--ink-soft)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px;margin:0}
+.facts dt,.f-nums dt{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.facts dd,.f-nums dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
+.use{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--surface-2)}
+.ico{width:28px;height:28px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.didyou{font-size:.95rem;color:var(--ink-soft)}
+.didyou b{color:var(--ink)}
+.alt{font-family:var(--font-body);font-weight:400;font-size:.95rem;color:var(--ink-soft)}
+
+/* tracker */
+.trk-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.status{font:600 .74rem var(--font-mono);letter-spacing:.05em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:var(--surface-2);color:var(--ink)}
+.status.gas{background:var(--cool-soft);color:var(--cool-text)}
+.status.liquid{background:var(--accent-soft);color:var(--accent-text)}
+.status.done{background:var(--good-soft);color:var(--good)}
+.compare{padding:30px 4px 30px}
+.cmp-track{position:relative;height:12px;border-radius:999px;background:linear-gradient(90deg,var(--cool),var(--hot))}
+.cmp-bp{position:absolute;top:-9px;bottom:-9px;width:3px;border-radius:2px;background:var(--ink);transform:translateX(-50%);transition:left .5s}
+.cmp-here{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:var(--surface);border:4px solid var(--ink);transform:translate(-50%,-50%);transition:left .6s ease}
+.cmp-bp::after,.cmp-here::after{content:attr(data-label);position:absolute;left:50%;white-space:nowrap;font:600 .74rem var(--font-mono);color:var(--ink);transform:translateX(-50%)}
+.cmp-bp::after{bottom:100%;padding-bottom:4px}
+.cmp-here::after{top:100%;margin-top:8px}
+[data-align="start"]::after{transform:translateX(-12px)}
+[data-align="end"]::after{transform:translateX(calc(-100% + 12px))}
+.verdict{font-weight:600}
+.verdict.gas{color:var(--cool-text)}.verdict.liquid{color:var(--accent-text)}
+.log{margin:0;padding:0;list-style:none;display:grid;gap:8px;max-height:280px;overflow:auto;font-size:.93rem}
+.log li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;color:var(--ink-soft)}
+.log li:last-child{color:var(--ink)}
+.log .lt{font:600 .72rem var(--font-mono);padding:3px 7px;border-radius:6px;background:var(--surface-2);color:var(--ink);margin-top:2px;font-variant-numeric:tabular-nums;min-width:4.6em;text-align:center}
+
+/* steps */
+.steps{display:grid;gap:12px}
+.steps-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.steps-h p{font-size:.88rem;color:var(--ink-soft)}
+.steps ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.step{width:100%;text-align:left;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 14px;padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;cursor:pointer}
+.step:hover{border-color:var(--ink-soft)}
+.step .n{grid-row:span 2;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:600 1rem var(--font-mono);background:var(--surface-2)}
+.step b{font-family:var(--font-display);font-size:1.08rem;font-weight:700}
+.step .t{color:var(--ink-soft);font-size:.95rem}
+.step[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.step[aria-pressed="true"] .n{background:var(--accent);color:var(--accent-ink)}
+.step[aria-pressed="true"] .t{color:var(--ink)}
+
+/* lower sections */
+.section{display:grid;gap:16px;padding-top:44px}
+.section > header{display:grid;gap:6px}
+.section > header p{color:var(--ink-soft);max-width:62ch}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding-top:44px}
+@media (max-width:820px){.two{grid-template-columns:minmax(0,1fr)}}
+.two .card{display:grid;gap:14px;align-content:start}
+.two .card > p{color:var(--ink-soft)}
+.rule-row{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+.rule-row .chain-svg{height:24px;width:auto}
+.flow{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:0}
+.flow li{display:inline-flex;align-items:center;gap:6px;font-size:.92rem;font-weight:500}
+.flow li span{padding:5px 10px;border-radius:8px;background:var(--surface-2)}
+.flow li:not(:last-child)::after{content:"→";color:var(--ink-soft)}
+.flow li:last-child span{background:var(--ink);color:var(--surface)}
+.pot{width:100%;max-width:420px;height:auto;display:block}
+.pot text{font-family:var(--font-body);font-size:13px;fill:var(--ink)}
+.pot-body{fill:var(--steel);stroke:var(--steel-dark);stroke-width:2}
+.pot-handle{stroke:var(--steel-dark);stroke-width:5;stroke-linecap:round}
+.lid{fill:var(--cool);stroke:var(--steel-dark);stroke-width:1.5}
+.water{fill:var(--cool);opacity:.35}
+.drip{fill:var(--cool)}
+.steam{fill:none;stroke:var(--ink-soft);stroke-width:2.5;stroke-linecap:round;opacity:.7;animation:steam 2.6s ease-in-out infinite}
+.steam:nth-of-type(2){animation-delay:-.9s}.steam:nth-of-type(3){animation-delay:-1.7s}
+@keyframes steam{0%{transform:translateY(6px);opacity:.15}40%{opacity:.8}100%{transform:translateY(-6px);opacity:.2}}
+
+.frac-ends{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+.frac-ends::before{content:"";width:22px;height:2px;background:var(--line)}
+.frac-list{list-style:none;margin:0;padding:0;display:grid;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)}
+.frow{display:grid;grid-template-columns:minmax(150px,1fr) minmax(0,1fr) minmax(170px,.9fr) minmax(0,1.5fr);gap:10px 22px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+.frow:first-child{border-top:0}
+.f-name{display:flex;gap:12px;align-items:center;min-width:0}
+.f-name p{font-size:.85rem;color:var(--ink-soft)}
+.f-chain{min-width:0}
+.f-chain .chain-svg{height:22px;width:auto;max-width:100%}
+.f-nums{display:flex;gap:18px;margin:0}
+.f-use{display:flex;gap:12px;align-items:center;min-width:0;font-size:.95rem}
+@media (max-width:760px){
+  .frow{grid-template-columns:minmax(0,1fr) auto}
+  .f-nums,.f-use{grid-column:1/-1}
+  .f-chain .chain-svg{height:18px}
+}
+.words{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0}
+@media (max-width:860px){.words{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:540px){.words{grid-template-columns:minmax(0,1fr)}}
+.words > div{padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
+.words dt{font-family:var(--font-display);font-weight:700;font-size:1.08rem}
+.words dd{margin:4px 0 0;color:var(--ink-soft);font-size:.95rem}
+
+/* quiz */
+.quiz{display:grid;gap:16px}
+.quiz-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.q-prog{font-family:var(--font-mono);font-size:.85rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+#qBody{display:grid;gap:14px;max-width:720px}
+.q-text{font-size:1.15rem;font-weight:500}
+.q-chain .chain-svg{height:26px;width:auto}
+.q-opts{display:grid;gap:8px}
+.q-opt{text-align:left;padding:12px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font:500 1rem var(--font-body);color:var(--ink);cursor:pointer;min-height:48px}
+.q-opt:hover:not(:disabled){border-color:var(--ink-soft)}
+.q-opt:disabled{cursor:default}
+.q-opt.is-right{border-color:var(--good);background:var(--good-soft)}
+.q-opt.is-wrong{border-color:var(--bad);background:var(--bad-soft)}
+.q-tower{display:grid;gap:4px;max-width:440px;padding:8px;border-radius:22px 22px 10px 10px;background:var(--surface-2);border:1px solid var(--line)}
+.q-tower .q-opt{display:flex;align-items:center;gap:10px;border-radius:8px;padding:9px 12px;min-height:44px}
+.q-tower .q-opt small{margin-left:auto;font-family:var(--font-mono);font-size:.78rem;color:var(--ink-soft)}
+.q-feedback{padding:14px 16px;border-radius:12px;display:grid;gap:4px}
+.q-feedback.ok{background:var(--good-soft)}
+.q-feedback.no{background:var(--bad-soft)}
+.q-feedback b{font-family:var(--font-display);font-size:1.1rem}
+.q-score{font-family:var(--font-display);font-weight:800;font-size:2rem}
+.foot{padding-top:36px;font-size:.85rem;color:var(--ink-soft);max-width:75ch}
+
+/* 3D tower */
+.three-card{display:grid;gap:14px}
+.three-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
+.seg button{font:600 .9rem/1.2 var(--font-body);padding:8px 16px;border-radius:999px;border:0;background:transparent;color:var(--ink-soft);cursor:pointer;min-height:40px}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.16)}
+.three-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.three-grid{grid-template-columns:minmax(0,1fr)}}
+.stage{position:relative;height:clamp(440px,76vh,740px);border-radius:12px;overflow:hidden;background:radial-gradient(120% 90% at 50% 30%,var(--stage-hi),var(--stage-lo));touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.stage.dragging{cursor:grabbing}
+@media (max-width:600px){.stage{height:auto;aspect-ratio:3/4}}
+.stage.narrow .tag3d .tmp,.stage.narrow .tag3d.opt{display:none}
+.stage canvas{display:block;width:100%;height:100%}
+.overlay3d{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.hs{position:absolute;z-index:2;left:0;top:0;width:28px;height:28px;margin:-14px 0 0 -14px;padding:0;border-radius:50%;border:2px solid var(--surface);background:var(--accent);color:var(--accent-ink);font:600 .8rem/1 var(--font-mono);display:grid;place-items:center;cursor:pointer;pointer-events:auto;box-shadow:0 2px 6px rgba(0,0,0,.35);transition:opacity .25s}
+.hs.is-occ{opacity:.32}
+.hs[aria-pressed="true"]{background:var(--ink);color:var(--surface);box-shadow:0 0 0 4px var(--accent),0 2px 8px rgba(0,0,0,.4);opacity:1}
+.tag3d{position:absolute;left:0;top:0;display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:6px;background:var(--surface);border:1px solid var(--line);color:var(--ink);font:500 .74rem/1.35 var(--font-body);white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.tag3d .sw{width:10px;height:10px}
+.stage-hint{position:absolute;left:10px;bottom:10px;padding:5px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:.8rem;color:var(--ink-soft);pointer-events:none}
+.zoom{position:absolute;left:10px;top:10px;display:flex;gap:6px}
+.zoom button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 1.25rem/1 var(--font-body);cursor:pointer}
+.zoom button:hover{border-color:var(--ink-soft)}
+.no-gl .zoom,.no-gl .stage-hint{display:none}
+.no-gl-msg{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--ink-soft);pointer-events:auto}
+.part-panel{display:grid;gap:14px}
+.part-info{display:grid;gap:8px;align-content:start;padding:16px 18px;border-radius:12px;background:var(--surface-2);min-height:10em}
+.part-info h3{font-size:1.25rem}
+.part-info ol{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.dots3d{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.88rem;color:var(--ink-soft)}
+.dots3d > span{display:inline-flex;align-items:center;gap:6px}
+.sw-light{--fc:#bfe3f7}.sw-heavy{--fc:#ff7b54}.sw-liquid{--fc:#e39b2d}
+.facts3d{display:grid;gap:12px;padding-top:16px;border-top:1px solid var(--line)}
+.facts3d h3{font-size:1.15rem}
+.rf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px;margin:0}
+@media (max-width:760px){.rf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.rf-grid dt{font-family:var(--font-display);font-weight:800;font-size:1.5rem;line-height:1.2;font-variant-numeric:tabular-nums;color:var(--accent-text)}
+.rf-grid dd{margin:2px 0 0;font-size:.9rem;color:var(--ink-soft)}
+.part-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+@media (max-width:420px){.part-list{grid-template-columns:minmax(0,1fr)}}
+.pl-btn{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:8px 10px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:500 .88rem/1.3 var(--font-body);cursor:pointer;min-height:44px}
+.pl-btn:hover{border-color:var(--ink-soft)}
+.pl-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.pl-n{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font:600 .75rem/1 var(--font-mono)}
+
+@media (prefers-reduced-motion: reduce){
+  .hs{transition:none}
+  .flicker path,.steam,[data-part].lit{animation:none}
+  .cmp-here,.cmp-bp,.tank-liquid,.col-heat{transition:none}
+}
+</style>
+
+<div class="wrap">
+  <header class="intro">
+    <div class="topbar">
+      <div class="lang" role="group" aria-label="Language / ภาษา">
+        <button type="button" data-lang="en" lang="en" aria-pressed="true">English</button>
+        <button type="button" data-lang="th" lang="th" aria-pressed="false">ไทย</button>
+      </div>
+    </div>
+    <h1 data-i18n="h1">How does crude oil become petrol, jet fuel and roads?</h1>
+    <p class="lede" data-i18n="lede">Crude oil comes out of the ground as a thick, black mix of many different molecules. A refinery sorts them in a tall, hot tower. The trick: <strong>each kind of molecule turns into a gas and back into a liquid at its own temperature.</strong> This sorting method is called <strong>fractional distillation</strong>.</p>
+  </header>
+
+  <main class="lab">
+    <section class="card controls" data-i18n-aria="ctl.aria" aria-label="Tower controls">
+      <div class="heat">
+        <div class="heat-head">
+          <label for="heat"><span data-i18n="heat.label">Furnace heat</span><small data-i18n="heat.hint">Drag to change how hot the crude oil gets. Real furnaces run at 350–400°C.</small></label>
+          <output id="heatOut" for="heat">400°C</output>
+        </div>
+        <input type="range" id="heat" min="20" max="400" step="10" value="400">
+        <div class="heat-scale"><span data-i18n="scale.room">20°C (room)</span><span>200°C</span><span>400°C</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="followBtn" type="button" data-i18n="btn.follow">Follow a molecule</button>
+        <button class="btn" id="playBtn" type="button">Pause</button>
+        <button class="btn" id="slowBtn" type="button" aria-pressed="false" data-i18n="btn.slow">Slow motion</button>
+      </div>
+    </section>
+
+    <section class="card sim-card" data-i18n-aria="sim.aria" aria-label="Fractional distillation tower">
+      <p class="caption" id="caption" aria-live="polite"><span class="dot" aria-hidden="true"></span><span id="captionText">At 400°C, almost all of the crude oil boils into a gas.</span></p>
+      <svg id="sim" viewBox="0 0 500 640" role="img" aria-labelledby="simTitle simDesc">
+        <title id="simTitle" data-i18n="sim.title">Fractional distillation tower</title>
+        <desc id="simDesc" data-i18n="sim.desc">Crude oil is heated in a furnace. Its vapor enters a tall tower that is hot at the bottom and cool at the top. Small molecules rise to the top before turning back into liquid. Big molecules turn into liquid low down. Each tray collects one fraction: gases at the top, then petrol, naphtha, kerosene, diesel, fuel oil, and bitumen at the bottom.</desc>
+        <defs>
+          <linearGradient id="gHeat" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" style="stop-color:var(--col-hot);stop-opacity:1"/>
+            <stop offset=".85" style="stop-color:var(--col-hot);stop-opacity:0"/>
+          </linearGradient>
+          <linearGradient id="gThermo" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" style="stop-color:var(--hot)"/>
+            <stop offset="1" style="stop-color:var(--cool)"/>
+          </linearGradient>
+          <clipPath id="clipCol"><path d="M182,95 A53,33 0 0 1 288,95 L288,600 Q288,613 275,613 L195,613 Q182,613 182,600 Z"/></clipPath>
+        </defs>
+
+        <text class="part-label" x="14" y="36" data-i18n="svg.col1">Fractionating</text>
+        <text class="part-label" x="14" y="53" data-i18n="svg.col2">column (tower)</text>
+        <path class="leader" d="M118,48 L186,84"/>
+
+        <g data-part="collect" id="outPipes"></g>
+        <g data-part="heat">
+          <path class="pipe" d="M55,452 V486"/><path class="pipe-in" d="M55,452 V486"/>
+          <path class="pipe" d="M118,510 H184"/><path class="pipe-in" d="M118,510 H184"/>
+        </g>
+        <g data-part="column">
+          <path class="col-body" d="M180,95 A55,35 0 0 1 290,95 L290,600 Q290,615 275,615 L195,615 Q180,615 180,600 Z"/>
+          <path id="colHeat" class="col-heat" d="M182,95 A53,33 0 0 1 288,95 L288,600 Q288,613 275,613 L195,613 Q182,613 182,600 Z"/>
+          <path class="pool" clip-path="url(#clipCol)" d="M180,590 q13.75,-5 27.5,0 t27.5,0 t27.5,0 t27.5,0 V620 H180 Z"/>
+        </g>
+        <g data-part="trays" id="trays"></g>
+        <g data-part="trays">
+          <rect class="thermo" x="150" y="100" width="10" height="390" rx="5"/>
+          <text class="t-note" x="155" y="92" text-anchor="middle" data-i18n="svg.cooler">cooler</text>
+          <text class="t-note" x="155" y="503" text-anchor="middle" data-i18n="svg.hotter">hotter</text>
+          <g id="thermoTicks"></g>
+        </g>
+        <g data-part="heat">
+          <text class="part-label" x="55" y="364" text-anchor="middle" data-i18n="svg.crude">Crude oil</text>
+          <rect class="crude" x="20" y="372" width="70" height="80" rx="8"/>
+          <g id="crudeSpecks"></g>
+          <rect class="furnace" x="20" y="486" width="100" height="108" rx="6"/>
+          <text id="furnaceRead" class="furnace-read" x="70" y="514" text-anchor="middle">400°C</text>
+          <rect class="firebox" x="32" y="526" width="76" height="56" rx="4"/>
+          <g id="flames" transform="translate(70 580)">
+            <g class="flicker">
+              <g transform="translate(-22 0) scale(.72)"><path class="fl-a" d="M0,0 C-10,0 -11,-12 -5,-20 C-2,-25 -1,-30 0,-38 C4,-30 10,-24 10,-13 C10,-5 6,0 0,0Z"/><path class="fl-b" d="M0,0 C-5,0 -6,-6 -3,-11 C-1,-14 0,-17 0,-21 C3,-16 5,-12 5,-7 C5,-3 3,0 0,0Z"/></g>
+              <g><path class="fl-a" d="M0,0 C-10,0 -11,-12 -5,-20 C-2,-25 -1,-30 0,-38 C4,-30 10,-24 10,-13 C10,-5 6,0 0,0Z"/><path class="fl-b" d="M0,0 C-5,0 -6,-6 -3,-11 C-1,-14 0,-17 0,-21 C3,-16 5,-12 5,-7 C5,-3 3,0 0,0Z"/></g>
+              <g transform="translate(22 0) scale(.72)"><path class="fl-a" d="M0,0 C-10,0 -11,-12 -5,-20 C-2,-25 -1,-30 0,-38 C4,-30 10,-24 10,-13 C10,-5 6,0 0,0Z"/><path class="fl-b" d="M0,0 C-5,0 -6,-6 -3,-11 C-1,-14 0,-17 0,-21 C3,-16 5,-12 5,-7 C5,-3 3,0 0,0Z"/></g>
+            </g>
+          </g>
+          <text class="part-label" x="70" y="614" text-anchor="middle" data-i18n="svg.furnace">Furnace</text>
+        </g>
+        <g id="outTanks" data-part="collect"></g>
+        <g id="mols"></g>
+        <circle id="ring" class="ring is-off" r="14" cx="0" cy="0"/>
+      </svg>
+      <div class="sim-legend" aria-hidden="true">
+        <span><svg viewBox="0 0 30 12" class="f-kerosene"><polyline class="bond" points="5,8 12,4 19,8 26,4"/><circle class="bead" cx="5" cy="8" r="3"/><circle class="bead" cx="12" cy="4" r="3"/><circle class="bead" cx="19" cy="8" r="3"/><circle class="bead" cx="26" cy="4" r="3"/></svg><span data-i18n="leg.gas">gas molecule (chain of carbon atoms)</span></span>
+        <span><svg viewBox="0 0 12 14" class="f-kerosene"><path class="drop" d="M6,1 C8.5,4.5 10.5,6.5 10.5,9 A4.5,4.5 0 1 1 1.5,9 C1.5,6.5 3.5,4.5 6,1Z"/></svg><span data-i18n="leg.drop">liquid drop</span></span>
+        <span data-i18n="leg.tap">Tap a tank to learn more</span>
+      </div>
+    </section>
+
+    <section class="card info" id="info" aria-live="off"></section>
+
+    <section class="steps" aria-labelledby="steps-h">
+      <div class="steps-h"><h2 id="steps-h" data-i18n="steps.h">How it works</h2><p data-i18n="steps.hint">Tap a step to light it up on the tower.</p></div>
+      <ol>
+        <li><button class="step" type="button" data-part="heat" aria-pressed="false"><span class="n">1</span><b data-i18n="s1.b">Heat it up</b><span class="t" data-i18n="s1.t">Crude oil is pumped into a furnace and heated to 350–400°C. Most of it boils and turns into a hot gas called vapor.</span></button></li>
+        <li><button class="step" type="button" data-part="column" aria-pressed="false"><span class="n">2</span><b data-i18n="s2.b">The vapor rises</b><span class="t" data-i18n="s2.t">The vapor flows into a tall tower called a fractionating column and floats up. The tower is hottest at the bottom and gets cooler toward the top.</span></button></li>
+        <li><button class="step" type="button" data-part="trays" aria-pressed="false"><span class="n">3</span><b data-i18n="s3.b">Cool down and condense</b><span class="t" data-i18n="s3.t">A molecule turns back into a liquid when it reaches a tray that is cooler than its boiling point. Big molecules condense low down. Small ones keep rising.</span></button></li>
+        <li><button class="step" type="button" data-part="collect" aria-pressed="false"><span class="n">4</span><b data-i18n="s4.b">Collect the fractions</b><span class="t" data-i18n="s4.t">Each tray catches a different liquid, called a fraction. Pipes carry the fractions out to tanks. Tiny gas molecules leave from the top, and thick bitumen drains from the bottom.</span></button></li>
+      </ol>
+    </section>
+  </main>
+
+  <section class="section" aria-labelledby="in-h">
+    <header>
+      <h2 id="in-h" data-i18n="in.h">Inside a real tower</h2>
+      <p data-i18n="in.p">The tower above is a simple picture. This is what a real one looks like inside, with steel trays, bubble caps and pipes. Drag the model to turn it, then try One tray up close to see how the sorting really happens.</p>
+    </header>
+    <div class="card three-card">
+      <div class="three-bar">
+        <div class="seg" role="group" data-i18n-aria="in.views" aria-label="View">
+          <button type="button" data-view="tower" aria-pressed="true" data-i18n="in.tower">Whole tower</button>
+          <button type="button" data-view="tray" aria-pressed="false" data-i18n="in.tray">One tray up close</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn" type="button" id="cutBtn" aria-pressed="true" data-i18n="in.cut">Cut open</button>
+          <button class="btn" type="button" id="flowBtn">Pause flow</button>
+          <button class="btn" type="button" id="resetBtn" data-i18n="in.reset">Reset view</button>
+        </div>
+      </div>
+      <div class="three-grid">
+        <div class="stage" id="stage" tabindex="0" role="group" data-i18n-aria="in.stage" aria-label="3D model of the tower. Drag or use the arrow keys to turn it.">
+          <canvas id="c3d"></canvas>
+          <div class="overlay3d" id="overlay3d"></div>
+          <p class="stage-hint" data-i18n="in.hint">Drag to turn</p>
+          <div class="zoom"><button type="button" id="zoomIn" data-i18n-aria="in.zin" aria-label="Zoom in">+</button><button type="button" id="zoomOut" data-i18n-aria="in.zout" aria-label="Zoom out">−</button></div>
+        </div>
+        <aside class="part-panel">
+          <div class="part-info" id="partInfo" aria-live="polite"></div>
+          <ol class="part-list" id="partList"></ol>
+        </aside>
+      </div>
+      <div class="facts3d">
+        <h3 data-i18n="rf.h">A real tower by the numbers</h3>
+        <dl class="rf-grid">
+          <div><dt data-i18n="rf1.v">about 50 m</dt><dd data-i18n="rf1.d">tall, as high as a 15-storey building</dd></div>
+          <div><dt data-i18n="rf2.v">up to 10 m</dt><dd data-i18n="rf2.d">wide</dd></div>
+          <div><dt>30–50</dt><dd data-i18n="rf3.d">trays inside. This model shows 14 so you can see them.</dd></div>
+          <div><dt>3–6</dt><dd data-i18n="rf4.d">draw-off trays with a side pipe. The rest only pass vapor up and liquid down.</dd></div>
+          <div><dt>350–400°C</dt><dd data-i18n="rf5.d">hot crude oil going in near the bottom</dd></div>
+          <div><dt data-i18n="rf6.v">10+ pools</dt><dd data-i18n="rf6.d">of crude oil a day through a big tower, counted in Olympic swimming pools</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="two">
+    <article class="card">
+      <h2 data-i18n="rule.h">The one rule to remember</h2>
+      <p data-i18n="rule.p">Most molecules in crude oil are chains of carbon atoms with hydrogen atoms stuck on. The length of the chain decides where the molecule ends up.</p>
+      <div class="rule-row">
+        <div id="ruleSmall"></div>
+        <ul class="flow"><li><span data-i18n="rule.s1">Short chain</span></li><li><span data-i18n="rule.s2">Low boiling point</span></li><li><span data-i18n="rule.s3">Stays a gas longer</span></li><li><span data-i18n="rule.s4">Comes out high up</span></li></ul>
+      </div>
+      <div class="rule-row">
+        <div id="ruleBig"></div>
+        <ul class="flow"><li><span data-i18n="rule.b1">Long chain</span></li><li><span data-i18n="rule.b2">High boiling point</span></li><li><span data-i18n="rule.b3">Turns liquid sooner</span></li><li><span data-i18n="rule.b4">Comes out low down</span></li></ul>
+      </div>
+    </article>
+    <article class="card">
+      <h2 data-i18n="pot.h">You have seen this at home</h2>
+      <p data-i18n="pot.p">When water boils in a pot, steam rises and touches the cooler lid. The steam turns back into water drops. That change from gas to liquid is called condensing. The oil tower works the same way. Its trays act like lids at different temperatures, so different molecules condense on each one.</p>
+      <svg class="pot" viewBox="0 0 330 196" role="img" data-i18n-aria="pot.aria" aria-label="A pot of boiling water on a flame. Steam rises, touches the cool lid and turns back into water drops.">
+        <path class="steam" d="M84,112 q-7,-8 0,-16 t0,-16"/>
+        <path class="steam" d="M120,112 q-7,-8 0,-16 t0,-16"/>
+        <path class="steam" d="M156,112 q-7,-8 0,-16 t0,-16"/>
+        <path class="lid" d="M40,64 Q120,32 200,64 L200,69 L40,69 Z"/>
+        <rect class="lid" x="112" y="34" width="16" height="9" rx="3"/>
+        <path class="drip" transform="translate(76 74)" d="M0,-4 C2,-1 3,1 3,2.5 A3,3 0 1 1 -3,2.5 C-3,1 -2,-1 0,-4Z"/>
+        <path class="drip" transform="translate(104 76)" d="M0,-4 C2,-1 3,1 3,2.5 A3,3 0 1 1 -3,2.5 C-3,1 -2,-1 0,-4Z"/>
+        <path class="drip" transform="translate(138 75)" d="M0,-4 C2,-1 3,1 3,2.5 A3,3 0 1 1 -3,2.5 C-3,1 -2,-1 0,-4Z"/>
+        <path class="drip" transform="translate(172 74)" d="M0,-4 C2,-1 3,1 3,2.5 A3,3 0 1 1 -3,2.5 C-3,1 -2,-1 0,-4Z"/>
+        <path class="pot-handle" d="M42,114 H28 M198,114 H212"/>
+        <path class="pot-body" d="M44,104 H196 V156 Q196,168 184,168 H56 Q44,168 44,156 Z"/>
+        <rect class="water" x="48" y="118" width="144" height="46" rx="4"/>
+        <g transform="translate(120 192)">
+          <g transform="translate(-30 0) scale(.55)"><path class="fl-a" d="M0,0 C-10,0 -11,-12 -5,-20 C-2,-25 -1,-30 0,-38 C4,-30 10,-24 10,-13 C10,-5 6,0 0,0Z"/></g>
+          <g transform="scale(.6)"><path class="fl-a" d="M0,0 C-10,0 -11,-12 -5,-20 C-2,-25 -1,-30 0,-38 C4,-30 10,-24 10,-13 C10,-5 6,0 0,0Z"/></g>
+          <g transform="translate(30 0) scale(.55)"><path class="fl-a" d="M0,0 C-10,0 -11,-12 -5,-20 C-2,-25 -1,-30 0,-38 C4,-30 10,-24 10,-13 C10,-5 6,0 0,0Z"/></g>
+        </g>
+        <path class="leader" d="M202,58 H226"/><text x="232" y="62" data-i18n="pot.lid">Cool lid</text>
+        <path class="leader" d="M178,77 H226"/><text x="232" y="81" data-i18n="pot.drops">Drops form</text>
+        <path class="leader" d="M162,96 H226"/><text x="232" y="100" data-i18n="pot.steam">Steam rises</text>
+        <path class="leader" d="M198,140 H226"/><text x="232" y="144" data-i18n="pot.water">Hot water</text>
+        <path class="leader" d="M156,182 H226"/><text x="232" y="186" data-i18n="pot.heat">Heat</text>
+      </svg>
+    </article>
+  </div>
+
+  <section class="section" aria-labelledby="fr-h">
+    <header>
+      <h2 id="fr-h" data-i18n="fr.h">Meet the fractions</h2>
+      <p data-i18n="fr.p">A fraction is a group of molecules with similar sizes, collected together. Here they are in tower order. The higher up a fraction comes out, the smaller and lighter its molecules.</p>
+    </header>
+    <p class="frac-ends" data-i18n="fr.top">Top of the tower · coolest</p>
+    <ol class="frac-list" id="fracList"></ol>
+    <p class="frac-ends" data-i18n="fr.bottom">Bottom of the tower · hottest</p>
+  </section>
+
+  <section class="section" aria-labelledby="w-h">
+    <header><h2 id="w-h" data-i18n="w.h">Words to know</h2></header>
+    <dl class="words">
+      <div><dt data-i18n="w1.t">Crude oil</dt><dd data-i18n="w1.d">A thick, black liquid found deep underground. It formed over millions of years from the remains of tiny sea creatures.</dd></div>
+      <div><dt data-i18n="w2.t">Hydrocarbon</dt><dd data-i18n="w2.d">A molecule made only of hydrogen and carbon atoms. Crude oil is mostly hydrocarbons.</dd></div>
+      <div><dt data-i18n="w3.t">Boiling point</dt><dd data-i18n="w3.d">The temperature at which a liquid boils and turns into a gas. Bigger molecules have higher boiling points.</dd></div>
+      <div><dt data-i18n="w4.t">Evaporate</dt><dd data-i18n="w4.d">To change from a liquid into a gas, for example when it is heated.</dd></div>
+      <div><dt data-i18n="w5.t">Condense</dt><dd data-i18n="w5.d">To change from a gas back into a liquid, usually by cooling down.</dd></div>
+      <div><dt data-i18n="w6.t">Fraction</dt><dd data-i18n="w6.d">A group of molecules with similar sizes and boiling points that comes out of the tower together.</dd></div>
+    </dl>
+  </section>
+
+  <section class="section" aria-labelledby="quiz-h">
+    <div class="card quiz">
+      <div class="quiz-head"><h2 id="quiz-h" data-i18n="quiz.h">Test yourself</h2><p class="q-prog" id="qProg"></p></div>
+      <div id="qBody"></div>
+    </div>
+  </section>
+
+  <p class="foot" data-i18n="foot">This is a simple model. Real towers have many more trays, and real fractions overlap a little. The temperatures and carbon numbers here are rounded, and the boiling points are for straight-chain hydrocarbons called alkanes.</p>
+</div>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const $ = (s, r = document) => r.querySelector(s);
+  const svgEl = (tag, attrs = {}) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  const fmtT = t => (t < 0 ? '−' + Math.abs(t) : String(t)) + '°C';
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const randInt = (a, b) => Math.floor(rand(a, b + 1));
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- language ----------
+  let lang = 'en';
+  const TH_DOM = {
+    'h1':'น้ำมันดิบกลายเป็นน้ำมันเบนซิน น้ำมันเครื่องบิน และถนนได้อย่างไร?',
+    'lede':'น้ำมันดิบที่ขุดขึ้นมาจากใต้ดินเป็นของเหลวข้นสีดำ ที่มีโมเลกุลหลายชนิดปนกันอยู่ โรงกลั่นน้ำมันแยกโมเลกุลเหล่านี้ออกจากกันในหอสูงที่ร้อน เคล็ดลับคือ <strong>โมเลกุลแต่ละชนิดจะกลายเป็นไอ และกลับมาเป็นของเหลว ที่อุณหภูมิเฉพาะของตัวเอง</strong> วิธีแยกแบบนี้เรียกว่า <strong>การกลั่นลำดับส่วน</strong>',
+    'heat.label':'ความร้อนของเตาเผา',
+    'heat.hint':'ลากเพื่อปรับว่าน้ำมันดิบจะร้อนแค่ไหน เตาเผาจริงใช้ความร้อน 350–400°C',
+    'scale.room':'20°C (อุณหภูมิห้อง)',
+    'btn.follow':'ติดตามโมเลกุล',
+    'btn.slow':'ภาพช้า',
+    'sim.title':'หอกลั่นลำดับส่วน',
+    'sim.desc':'น้ำมันดิบถูกทำให้ร้อนในเตาเผา ไอของน้ำมันเข้าไปในหอสูงที่ร้อนด้านล่างและเย็นด้านบน โมเลกุลเล็กลอยขึ้นไปถึงด้านบนก่อนจะกลับเป็นของเหลว โมเลกุลใหญ่กลายเป็นของเหลวที่ชั้นล่าง ถาดแต่ละชั้นเก็บส่วนกลั่นหนึ่งชนิด ได้แก่ แก๊สที่ยอดหอ ตามด้วยน้ำมันเบนซิน แนฟทา น้ำมันก๊าด น้ำมันดีเซล น้ำมันเตา และยางมะตอยที่ก้นหอ',
+    'svg.col1':'หอกลั่น',
+    'svg.col2':'ลำดับส่วน',
+    'svg.cooler':'เย็นกว่า',
+    'svg.hotter':'ร้อนกว่า',
+    'svg.crude':'น้ำมันดิบ',
+    'svg.furnace':'เตาเผา',
+    'leg.gas':'โมเลกุลในสภาพไอ (สายโซ่อะตอมคาร์บอน)',
+    'leg.drop':'หยดของเหลว',
+    'leg.tap':'แตะถังเพื่อดูข้อมูลเพิ่ม',
+    'steps.h':'หอกลั่นทำงานอย่างไร',
+    'steps.hint':'แตะแต่ละขั้นเพื่อให้ส่วนนั้นบนหอสว่างขึ้น',
+    's1.b':'ให้ความร้อน',
+    's1.t':'น้ำมันดิบถูกสูบเข้าเตาเผาและให้ความร้อนถึงประมาณ 350–400°C ส่วนใหญ่จะเดือดและกลายเป็นแก๊สร้อนที่เรียกว่า ไอ',
+    's2.b':'ไอลอยขึ้น',
+    's2.t':'ไอไหลเข้าไปในหอสูงที่เรียกว่า หอกลั่นลำดับส่วน แล้วลอยขึ้นไป หอจะร้อนที่สุดที่ด้านล่าง และเย็นลงเรื่อย ๆ เมื่อขึ้นไปด้านบน',
+    's3.b':'เย็นลงและควบแน่น',
+    's3.t':'โมเลกุลจะกลับมาเป็นของเหลวเมื่อไปถึงถาดที่เย็นกว่าจุดเดือดของมัน โมเลกุลใหญ่ควบแน่นที่ชั้นล่าง ส่วนโมเลกุลเล็กลอยขึ้นต่อไป',
+    's4.b':'เก็บส่วนกลั่น',
+    's4.t':'ถาดแต่ละชั้นรองรับของเหลวต่างชนิดกัน เรียกว่า ส่วนกลั่น ท่อจะนำส่วนกลั่นออกไปยังถังเก็บ โมเลกุลแก๊สตัวจิ๋วออกทางยอดหอ และยางมะตอยข้น ๆ ไหลออกทางก้นหอ',
+    'rule.h':'กฎข้อเดียวที่ต้องจำ',
+    'rule.p':'โมเลกุลส่วนใหญ่ในน้ำมันดิบเป็นสายโซ่ของอะตอมคาร์บอน ที่มีอะตอมไฮโดรเจนเกาะอยู่ ความยาวของสายโซ่เป็นตัวกำหนดว่าโมเลกุลจะไปอยู่ตรงไหน',
+    'rule.s1':'สายโซ่สั้น', 'rule.s2':'จุดเดือดต่ำ', 'rule.s3':'เป็นไอได้นานกว่า', 'rule.s4':'ออกมาที่ชั้นบน',
+    'rule.b1':'สายโซ่ยาว', 'rule.b2':'จุดเดือดสูง', 'rule.b3':'กลายเป็นของเหลวเร็วกว่า', 'rule.b4':'ออกมาที่ชั้นล่าง',
+    'pot.h':'เคยเห็นแบบนี้ที่บ้าน',
+    'pot.p':'เวลาต้มน้ำในหม้อ ไอน้ำจะลอยขึ้นไปโดนฝาหม้อที่เย็นกว่า แล้วกลายเป็นหยดน้ำ การเปลี่ยนจากแก๊สกลับเป็นของเหลวแบบนี้เรียกว่า การควบแน่น หอกลั่นก็ทำงานแบบเดียวกัน ถาดแต่ละชั้นเปรียบเหมือนฝาหม้อที่มีอุณหภูมิต่างกัน โมเลกุลแต่ละชนิดจึงควบแน่นบนถาดคนละชั้น',
+    'pot.lid':'ฝาหม้อเย็น', 'pot.drops':'เกิดหยดน้ำ', 'pot.steam':'ไอน้ำลอยขึ้น', 'pot.water':'น้ำร้อน', 'pot.heat':'ความร้อน',
+    'fr.h':'รู้จักส่วนกลั่น',
+    'fr.p':'ส่วนกลั่นคือกลุ่มของโมเลกุลที่มีขนาดใกล้เคียงกันซึ่งถูกเก็บรวมกัน ด้านล่างนี้เรียงตามลำดับในหอ ยิ่งออกมาสูงเท่าไร โมเลกุลก็ยิ่งเล็กและเบา',
+    'fr.top':'ยอดหอ · เย็นที่สุด',
+    'fr.bottom':'ก้นหอ · ร้อนที่สุด',
+    'w.h':'คำศัพท์ที่ควรรู้',
+    'w1.t':'น้ำมันดิบ', 'w1.d':'ของเหลวข้นสีดำที่พบลึกใต้ดิน เกิดจากซากสิ่งมีชีวิตเล็ก ๆ ในทะเลที่ทับถมกันนานหลายล้านปี',
+    'w2.t':'ไฮโดรคาร์บอน', 'w2.d':'โมเลกุลที่ประกอบด้วยอะตอมไฮโดรเจนและคาร์บอนเท่านั้น น้ำมันดิบส่วนใหญ่เป็นไฮโดรคาร์บอน',
+    'w3.t':'จุดเดือด', 'w3.d':'อุณหภูมิที่ของเหลวเดือดและกลายเป็นแก๊ส โมเลกุลที่ใหญ่กว่ามีจุดเดือดสูงกว่า',
+    'w4.t':'การระเหย', 'w4.d':'การเปลี่ยนจากของเหลวเป็นแก๊ส เช่น เมื่อได้รับความร้อน',
+    'w5.t':'การควบแน่น', 'w5.d':'การเปลี่ยนจากแก๊สกลับเป็นของเหลว ส่วนใหญ่เกิดเมื่อเย็นลง',
+    'w6.t':'ส่วนกลั่น', 'w6.d':'กลุ่มของโมเลกุลที่มีขนาดและจุดเดือดใกล้เคียงกัน ที่ออกมาจากหอพร้อมกัน',
+    'quiz.h':'ทดสอบตัวเอง',
+    'foot':'นี่เป็นแบบจำลองอย่างง่าย หอกลั่นจริงมีถาดมากกว่านี้ และส่วนกลั่นจริงมีช่วงที่ซ้อนทับกันเล็กน้อย อุณหภูมิและจำนวนคาร์บอนในหน้านี้เป็นค่าโดยประมาณ และจุดเดือดที่ใช้เป็นของไฮโดรคาร์บอนแบบสายโซ่ตรงที่เรียกว่า แอลเคน'
+  };
+  const TH_ARIA = {
+    'ctl.aria':'ปุ่มควบคุมหอกลั่น',
+    'sim.aria':'หอกลั่นลำดับส่วน',
+    'pot.aria':'หม้อต้มน้ำบนไฟ ไอน้ำลอยขึ้นไปโดนฝาหม้อที่เย็น แล้วกลายเป็นหยดน้ำ'
+  };
+  Object.assign(TH_DOM, {
+    'in.h':'ข้างในหอกลั่นของจริง',
+    'in.p':'หอด้านบนเป็นภาพแบบง่าย ส่วนนี้แสดงหน้าตาข้างในของหอจริง ที่มีถาดเหล็ก ถ้วยครอบ และท่อต่าง ๆ ลากโมเดลเพื่อหมุนดู แล้วกดปุ่ม ส่องถาดหนึ่งชั้น เพื่อดูว่าการแยกเกิดขึ้นจริงอย่างไร',
+    'rf.h':'หอกลั่นจริงในตัวเลข',
+    'rf1.v':'ราว 50 ม.', 'rf1.d':'ความสูง เท่ากับตึก 15 ชั้น',
+    'rf2.v':'สูงสุดราว 10 ม.', 'rf2.d':'ความกว้างของหอ',
+    'rf3.d':'จำนวนถาดข้างใน โมเดลนี้แสดง 14 ถาดเพื่อให้มองเห็นง่าย',
+    'rf4.d':'ถาดดึงส่วนกลั่นที่มีท่อด้านข้าง ถาดที่เหลือมีหน้าที่ส่งไอขึ้นและส่งของเหลวลงเท่านั้น',
+    'rf5.d':'อุณหภูมิของน้ำมันดิบร้อนที่เข้าหอทางด้านล่าง',
+    'rf6.v':'มากกว่า 10 สระ', 'rf6.d':'ปริมาณน้ำมันดิบที่หอใหญ่กลั่นได้ในหนึ่งวัน เทียบกับสระว่ายน้ำโอลิมปิก',
+    'in.tower':'หอทั้งหอ', 'in.tray':'ส่องถาดหนึ่งชั้น', 'in.cut':'ผ่าครึ่ง', 'in.reset':'รีเซ็ตมุมมอง', 'in.hint':'ลากเพื่อหมุน'
+  });
+  Object.assign(TH_ARIA, {
+    'in.views':'มุมมอง', 'in.stage':'โมเดล 3 มิติของหอกลั่น ลากหรือใช้ปุ่มลูกศรเพื่อหมุน', 'in.zin':'ซูมเข้า', 'in.zout':'ซูมออก'
+  });
+  const EN_DOM = {}, EN_ARIA = {};
+  document.querySelectorAll('[data-i18n]').forEach(el => { EN_DOM[el.dataset.i18n] = el.innerHTML; });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => { EN_ARIA[el.dataset.i18nAria] = el.getAttribute('aria-label'); });
+
+  const UI = {
+    en: {
+      docTitle: 'Fractional Distillation Lab',
+      list: a => a.length <= 1 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1],
+      pause: 'Pause', play: 'Play', following: 'Following:',
+      introK: 'Explore', introH: 'Meet what comes out',
+      introP: 'Tap a tank on the right side of the tower to see what that fraction is used for. Or press <b>Follow a molecule</b> to ride along with one molecule on its trip.',
+      back: '← All fractions', carbon: 'Carbon atoms', boils: 'Boils at', where: 'Where it comes out', look: 'What it looks like',
+      used: 'Used for:', didyou: 'Did you know?', followX: s => `Follow a ${s.toLowerCase()} molecule`,
+      trkK: 'Following one molecule', myBp: 'My boiling point', another: 'Follow another', stop: 'Stop following',
+      stGas: 'Gas · rising', stLiquid: 'Liquid', stDone: 'Collected',
+      mystery: 'Mystery molecule', unboiled: 'Molecule that did not boil', molOf: s => `${s} molecule`,
+      boilsAt: t => `boils at ${t}`, here: t => `here: ${t}`,
+      hotter: (t, b) => `${t} here is hotter than my boiling point (${b}), so I stay a gas.`,
+      cooler: (t, b) => `${t} here is cooler than my boiling point (${b}), so I am a liquid.`,
+      ltTank: 'tank', ltBottom: 'bottom',
+      outletAria: n => `${n}: show details`,
+      qProg: (i, n, s) => `Question ${i} of ${n} · Score ${s}`, qDone: 'Finished',
+      qScore: (s, n) => `You got ${s} out of ${n}`,
+      qPerfect: 'Perfect score. You really understand how the tower works!',
+      qGood: 'Great work! Check the explanations for the ones you missed.',
+      qTry: 'Good try! Play with the tower and follow a few molecules, then try again.',
+      qRight: 'Correct!', qWrong: 'Not quite.', qNext: 'Next question', qSee: 'See my score', qAgain: 'Try again',
+      towerAria: 'Places in the tower, from top to bottom'
+    },
+    th: {
+      docTitle: 'ห้องทดลองการกลั่นลำดับส่วน',
+      list: a => a.length <= 1 ? (a[0] || '') : a.slice(0, -1).join(' ') + ' และ' + a[a.length - 1],
+      pause: 'หยุดชั่วคราว', play: 'เล่น', following: 'กำลังติดตาม:',
+      introK: 'สำรวจ', introH: 'รู้จักสิ่งที่ได้ออกมา',
+      introP: 'แตะถังทางขวาของหอ เพื่อดูว่าส่วนกลั่นนั้นนำไปใช้ทำอะไร หรือกดปุ่ม <b>ติดตามโมเลกุล</b> เพื่อเดินทางไปพร้อมกับโมเลกุลหนึ่งตัว',
+      back: '← ส่วนกลั่นทั้งหมด', carbon: 'อะตอมคาร์บอน', boils: 'จุดเดือด', where: 'ออกมาตรงไหน', look: 'ลักษณะ',
+      used: 'ใช้ทำอะไร:', didyou: 'รู้หรือไม่?', followX: s => `ติดตามโมเลกุล${s}`,
+      trkK: 'กำลังติดตามโมเลกุลหนึ่งตัว', myBp: 'จุดเดือดของฉัน', another: 'ติดตามตัวอื่น', stop: 'หยุดติดตาม',
+      stGas: 'ไอ · กำลังลอยขึ้น', stLiquid: 'ของเหลว', stDone: 'เก็บแล้ว',
+      mystery: 'โมเลกุลปริศนา', unboiled: 'โมเลกุลที่ไม่เดือด', molOf: s => `โมเลกุล${s}`,
+      boilsAt: t => `เดือดที่ ${t}`, here: t => `ตรงนี้: ${t}`,
+      hotter: (t, b) => `ตรงนี้ ${t} ร้อนกว่าจุดเดือดของฉัน (${b}) ฉันจึงยังเป็นไอ`,
+      cooler: (t, b) => `ตรงนี้ ${t} เย็นกว่าจุดเดือดของฉัน (${b}) ฉันจึงเป็นของเหลว`,
+      ltTank: 'ถัง', ltBottom: 'ก้นหอ',
+      outletAria: n => `${n}: ดูข้อมูล`,
+      qProg: (i, n, s) => `ข้อ ${i} จาก ${n} · คะแนน ${s}`, qDone: 'จบแล้ว',
+      qScore: (s, n) => `ได้ ${s} จาก ${n} คะแนน`,
+      qPerfect: 'คะแนนเต็ม! เข้าใจการทำงานของหอกลั่นได้ดีเยี่ยม',
+      qGood: 'เก่งมาก! ลองอ่านคำอธิบายของข้อที่ตอบผิดดูนะ',
+      qTry: 'พยายามได้ดี! ลองเล่นกับหอกลั่นและติดตามโมเลกุลสักสองสามตัว แล้วลองทำใหม่',
+      qRight: 'ถูกต้อง!', qWrong: 'ยังไม่ถูก', qNext: 'ข้อต่อไป', qSee: 'ดูคะแนน', qAgain: 'ลองอีกครั้ง',
+      towerAria: 'ตำแหน่งในหอ จากบนลงล่าง'
+    }
+  };
+  const L = () => UI[lang];
+
+  // Boiling points (°C) of straight-chain alkanes, index = number of carbon atoms
+  const BP = [null,-162,-89,-42,-1,36,69,98,126,151,174,196,216,235,254,271,287,302,316,330,343,357,369,380,391,402,412,422,432,441,450];
+
+  const FR = {
+    gas:{cMin:1,cMax:4,w:8,cy:30,pipe:'M235,62 V30 H322',icon:'flame',repC:3,
+      en:{name:'Refinery gases',single:'Refinery gas',label:'Gases',lower:'the gases',cText:'1–4',bpText:'below 30°C',
+        where:'Out the top',whereLong:'Floats out of the very top as a gas',look:'Invisible gas',useShort:'cooking gas',use:'Bottled gas (LPG) for cooking, heating and camping stoves',endLine:'It is used as bottled gas for cooking and heating.',
+        fact:'These molecules are so small that they are still a gas at the cool top of the tower. They are squeezed into metal bottles to store them.'},
+      th:{name:'แก๊สปิโตรเลียม',single:'แก๊สปิโตรเลียม',label:'แก๊ส',lower:'แก๊สปิโตรเลียม',cText:'1–4',bpText:'ต่ำกว่า 30°C',
+        where:'ออกทางยอดหอ',whereLong:'ลอยออกทางยอดหอในสภาพแก๊ส',look:'แก๊สที่มองไม่เห็น',useShort:'แก๊สหุงต้ม',use:'แก๊สหุงต้ม (LPG) สำหรับทำอาหาร ให้ความร้อน และเตาแก๊สตั้งแคมป์',endLine:'ใช้เป็นแก๊สหุงต้มและให้ความร้อน',
+        fact:'โมเลกุลเหล่านี้เล็กมาก จนยังเป็นแก๊สแม้อยู่ที่ยอดหอซึ่งเย็น จึงต้องอัดใส่ถังเหล็กเพื่อเก็บไว้ใช้'}},
+    petrol:{cMin:5,cMax:7,w:12,y:140,T:30,icon:'car',repC:6,
+      en:{name:'Petrol',alt:'also called gasoline',label:'Petrol',lower:'petrol',cText:'5–7',bpText:'30–120°C',
+        where:'Tray at 30°C',whereLong:'Top tray (30°C)',look:'Clear, very runny liquid',useShort:'cars',use:'Fuel for cars and motorbikes',endLine:'It is used as fuel for cars.',
+        fact:'Petrol evaporates very easily. That is why you can smell it at a gas station.'},
+      th:{name:'น้ำมันเบนซิน',label:'เบนซิน',lower:'น้ำมันเบนซิน',cText:'5–7',bpText:'30–120°C',
+        where:'ถาด 30°C',whereLong:'ถาดบนสุด (30°C)',look:'ของเหลวใส ไหลง่ายมาก',useShort:'รถยนต์',use:'เชื้อเพลิงสำหรับรถยนต์และรถจักรยานยนต์',endLine:'ใช้เป็นเชื้อเพลิงของรถยนต์',
+        fact:'น้ำมันเบนซินระเหยง่ายมาก เราจึงได้กลิ่นเมื่ออยู่ที่ปั๊มน้ำมัน'}},
+    naphtha:{cMin:8,cMax:10,w:12,y:215,T:120,icon:'bottle',repC:9,
+      en:{name:'Naphtha',label:'Naphtha',lower:'naphtha',cText:'8–10',bpText:'120–180°C',
+        where:'Tray at 120°C',whereLong:'Tray at 120°C',look:'Clear liquid',useShort:'plastics',use:'Raw material for making plastics and other chemicals',endLine:'It is used to make plastics.',
+        fact:'Many plastic things around you, like bottles and toys, started out as naphtha.'},
+      th:{name:'แนฟทา',label:'แนฟทา',lower:'แนฟทา',cText:'8–10',bpText:'120–180°C',
+        where:'ถาด 120°C',whereLong:'ถาดที่ 120°C',look:'ของเหลวใส',useShort:'พลาสติก',use:'วัตถุดิบสำหรับผลิตพลาสติกและสารเคมีอื่น ๆ',endLine:'ใช้ทำพลาสติก',
+        fact:'ของใช้พลาสติกรอบตัวเรา เช่น ขวดและของเล่น หลายอย่างเริ่มต้นมาจากแนฟทา'}},
+    kerosene:{cMin:11,cMax:14,w:15,y:290,T:180,icon:'plane',repC:12,
+      en:{name:'Kerosene',label:'Kerosene',lower:'kerosene',cText:'11–14',bpText:'180–260°C',
+        where:'Tray at 180°C',whereLong:'Tray at 180°C',look:'Pale yellow, oily liquid',useShort:'jet planes',use:'Jet fuel for aeroplanes, and fuel for lamps and heaters',endLine:'It is used as jet fuel for planes.',
+        fact:'A big passenger jet can burn thousands of litres of kerosene in one hour of flying.'},
+      th:{name:'น้ำมันก๊าด',label:'น้ำมันก๊าด',lower:'น้ำมันก๊าด',cText:'11–14',bpText:'180–260°C',
+        where:'ถาด 180°C',whereLong:'ถาดที่ 180°C',look:'ของเหลวสีเหลืองอ่อน ลักษณะเป็นน้ำมัน',useShort:'เครื่องบิน',use:'น้ำมันเครื่องบินเจ็ท และเชื้อเพลิงสำหรับตะเกียงและเครื่องทำความร้อน',endLine:'ใช้เป็นน้ำมันเครื่องบินเจ็ท',
+        fact:'เครื่องบินโดยสารลำใหญ่ใช้น้ำมันก๊าดได้หลายพันลิตร ในการบินเพียงหนึ่งชั่วโมง'}},
+    diesel:{cMin:15,cMax:19,w:18,y:365,T:260,icon:'truck',repC:17,
+      en:{name:'Diesel',label:'Diesel',lower:'diesel',cText:'15–19',bpText:'260–340°C',
+        where:'Tray at 260°C',whereLong:'Tray at 260°C',look:'Yellow-brown, oily liquid',useShort:'trucks & buses',use:'Fuel for trucks, buses, tractors and some trains',endLine:'It is used as fuel for trucks and buses.',
+        fact:'Diesel is thicker and oilier than petrol because its molecules are longer chains.'},
+      th:{name:'น้ำมันดีเซล',label:'ดีเซล',lower:'น้ำมันดีเซล',cText:'15–19',bpText:'260–340°C',
+        where:'ถาด 260°C',whereLong:'ถาดที่ 260°C',look:'ของเหลวสีเหลืองอมน้ำตาล ลักษณะเป็นน้ำมัน',useShort:'รถบรรทุก/รถบัส',use:'เชื้อเพลิงสำหรับรถบรรทุก รถบัส รถแทรกเตอร์ และรถไฟบางขบวน',endLine:'ใช้เป็นเชื้อเพลิงของรถบรรทุกและรถบัส',
+        fact:'น้ำมันดีเซลข้นและมันกว่าน้ำมันเบนซิน เพราะโมเลกุลเป็นสายโซ่ที่ยาวกว่า'}},
+    fueloil:{cMin:20,cMax:24,w:15,y:440,T:340,icon:'ship',repC:22,
+      en:{name:'Fuel oil',label:'Fuel oil',lower:'fuel oil',cText:'20–24',bpText:'340–400°C',
+        where:'Tray at 340°C',whereLong:'Lowest tray (340°C)',look:'Thick, dark brown liquid',useShort:'ships',use:'Fuel for big ships and some power stations',endLine:'It is used as fuel for big ships.',
+        fact:'Heavy fuel oil is so thick that it is often warmed up before it will flow through pipes.'},
+      th:{name:'น้ำมันเตา',label:'น้ำมันเตา',lower:'น้ำมันเตา',cText:'20–24',bpText:'340–400°C',
+        where:'ถาด 340°C',whereLong:'ถาดล่างสุด (340°C)',look:'ของเหลวข้นสีน้ำตาลเข้ม',useShort:'เรือ',use:'เชื้อเพลิงสำหรับเรือขนาดใหญ่และโรงไฟฟ้าบางแห่ง',endLine:'ใช้เป็นเชื้อเพลิงของเรือขนาดใหญ่',
+        fact:'น้ำมันเตาข้นมาก จนมักต้องอุ่นให้ร้อนก่อน จึงจะไหลผ่านท่อได้'}},
+    bitumen:{cMin:25,cMax:30,w:20,cy:598,pipe:'M289,598 H322',icon:'road',repC:28,
+      en:{name:'Bitumen',label:'Bitumen',lower:'bitumen',cText:'25 or more',bpText:'above 400°C',
+        where:'Out the bottom',whereLong:'Drains out of the bottom as a liquid',look:'Black, thick and sticky',useShort:'roads',use:'Mixed with small stones to make roads, and used to waterproof roofs',endLine:'It is used to make roads.',
+        fact:'Bitumen molecules are too big to boil in the furnace. They stay liquid and sink to the bottom.'},
+      th:{name:'ยางมะตอย',label:'ยางมะตอย',lower:'ยางมะตอย',cText:'25 ขึ้นไป',bpText:'สูงกว่า 400°C',
+        where:'ออกทางก้นหอ',whereLong:'ไหลออกทางก้นหอในสภาพของเหลว',look:'สีดำ ข้น และเหนียว',useShort:'ทำถนน',use:'ผสมกับหินก้อนเล็ก ๆ เพื่อทำถนน และใช้กันน้ำบนหลังคา',endLine:'ใช้ทำถนน',
+        fact:'โมเลกุลของยางมะตอยใหญ่เกินกว่าจะเดือดในเตาเผา จึงยังเป็นของเหลวและจมลงก้นหอ'}}
+  };
+  const ORDER = ['gas','petrol','naphtha','kerosene','diesel','fueloil','bitumen'];
+  ORDER.forEach(id => { const f = FR[id]; if (f.y) { f.cy = f.y + 16; f.pipe = `M289,${f.y - 5} H304 V${f.y + 16} H322`; } });
+  const TRAYS = ['fueloil','diesel','kerosene','naphtha','petrol'].map(id => ({ id, y: FR[id].y, T: FR[id].T })); // bottom → top
+  const T = id => FR[id][lang];   // localized text for a fraction
+
+  const ICONS = {
+    flame:'<path d="M12 3c.6 3.2 4.5 5.4 4.5 10a4.5 4.5 0 0 1-9 0c0-2.3 1.2-3.8 2.4-4.8.1 1.8.8 3 2.1 3.3-.6-3.1-.4-5.6 0-8.5z"/>',
+    car:'<path d="M3 16.5V13l2-4.5h10.5L19 13h1.5a1.5 1.5 0 0 1 1.5 1.5v2"/><path d="M3 16.5h2m4 0h6m4 0h3"/><circle cx="7" cy="16.5" r="2"/><circle cx="17" cy="16.5" r="2"/><path d="M6 13h13"/>',
+    bottle:'<path d="M10 2.5h4M10.5 2.5v3L8 9v11a1.5 1.5 0 0 0 1.5 1.5h5A1.5 1.5 0 0 0 16 20V9l-2.5-3.5v-3"/><path d="M8 13h8"/>',
+    plane:'<path d="M21 15.5l-8-3.5V5.5a1.5 1.5 0 0 0-3 0V12l-8 3.5v2l8-2v3.8l-2 1.5V22l3.5-1 3.5 1v-1.2l-2-1.5v-3.8l8 2z"/>',
+    truck:'<path d="M2.5 6.5h11v10h-11z"/><path d="M13.5 10h4l3.5 3.5v3h-7.5"/><circle cx="6.5" cy="17.5" r="2"/><circle cx="17" cy="17.5" r="2"/>',
+    ship:'<path d="M3 14.5h18l-2.5 5.5h-13z"/><path d="M6 14.5v-5h12v5"/><path d="M10 9.5v-4h4v4"/>',
+    road:'<path d="M8.5 3L4 21M15.5 3L20 21"/><path d="M12 4v2.5M12 10v3M12 17v3.5"/>'
+  };
+  const iconSVG = name => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;
+
+  function fracOf(c) {
+    const bp = BP[c];
+    if (bp > 400) return 'bitumen';
+    for (const tr of TRAYS) if (tr.T < bp) return tr.id;
+    return 'gas';
+  }
+  function beadCount(c) { return c <= 10 ? c : Math.min(18, Math.round(10 + (c - 10) / 2)); }
+  function chainPoints(n, s, amp) {
+    const w = (n - 1) * s, pts = [];
+    for (let i = 0; i < n; i++) pts.push([i * s - w / 2, n > 1 ? (i % 2 ? -amp : amp) : 0]);
+    return pts;
+  }
+  function chainSVG(c, frac, s = 8, r = 4.4) {
+    const n = beadCount(c), amp = s * 0.32, pts = chainPoints(n, s, amp);
+    const w = (n - 1) * s + r * 2 + 4, h = amp * 2 + r * 2 + 4, ox = w / 2, oy = h / 2;
+    const P = p => (p[0] + ox).toFixed(1) + ',' + (p[1] + oy).toFixed(1);
+    const poly = n > 1 ? `<polyline class="bond" points="${pts.map(P).join(' ')}"/>` : '';
+    const beads = pts.map(p => `<circle class="bead" cx="${(p[0] + ox).toFixed(1)}" cy="${(p[1] + oy).toFixed(1)}" r="${r}"/>`).join('');
+    return `<svg class="chain-svg f-${frac}" viewBox="0 0 ${w.toFixed(1)} ${h.toFixed(1)}" width="${Math.round(w)}" height="${Math.round(h)}" aria-hidden="true">${poly}${beads}</svg>`;
+  }
+  function chainGroup(n, s, r) {
+    const g = svgEl('g', { class: 'chain' });
+    const pts = chainPoints(n, s, s * 0.32);
+    if (n > 1) g.append(svgEl('polyline', { class: 'bond', points: pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ') }));
+    pts.forEach(p => g.append(svgEl('circle', { class: 'bead', cx: p[0].toFixed(1), cy: p[1].toFixed(1), r })));
+    return g;
+  }
+
+  // ---------- DOM refs ----------
+  const sim = $('#sim'), molLayer = $('#mols'), ring = $('#ring');
+  const heatInput = $('#heat'), heatOut = $('#heatOut'), furnaceRead = $('#furnaceRead'), flames = $('#flames'), colHeat = $('#colHeat');
+  const caption = $('#caption'), captionText = $('#captionText'), info = $('#info');
+  const playBtn = $('#playBtn'), slowBtn = $('#slowBtn'), followBtn = $('#followBtn');
+
+  // ---------- static build ----------
+  const tankEls = {}, outletEls = {};
+  (function buildStatic() {
+    const pipes = $('#outPipes'), tanks = $('#outTanks'), trays = $('#trays'), ticks = $('#thermoTicks');
+    ORDER.forEach(id => {
+      const f = FR[id], cy = f.cy;
+      pipes.append(svgEl('path', { class: 'pipe', d: f.pipe }), svgEl('path', { class: 'pipe-in', d: f.pipe }));
+      const g = svgEl('g', { class: `outlet f-${id}`, 'data-frac': id, tabindex: '0', role: 'button' });
+      g.append(svgEl('rect', { class: 'hit', x: 316, y: cy - 27, width: 180, height: 54, rx: 10 }));
+      g.append(svgEl('rect', { class: 'tank', x: 322, y: cy - 22, width: 30, height: 44, rx: 5 }));
+      const liq = svgEl('rect', { class: 'tank-liquid', x: 325, width: 24, rx: 2, y: cy + 19, height: 0 });
+      g.append(liq);
+      tankEls[id] = { el: liq, bottom: cy + 19 };
+      const t1 = svgEl('text', { class: 'o-name', x: 362, y: cy - 1 });
+      const t2 = svgEl('text', { class: 'o-use', x: 362, y: cy + 15 });
+      g.append(t1, t2);
+      outletEls[id] = { g, t1, t2 };
+      tanks.append(g);
+    });
+    TRAYS.forEach(tr => {
+      trays.append(svgEl('line', { class: 'tray', x1: 182, x2: 288, y1: tr.y, y2: tr.y }));
+      ticks.append(svgEl('line', { class: 'tick', x1: 162, x2: 177, y1: tr.y, y2: tr.y }));
+      const t = svgEl('text', { class: 't-label', x: 146, y: tr.y + 5, 'text-anchor': 'end' });
+      t.textContent = tr.T + '°C';
+      ticks.append(t);
+    });
+    // crude oil = a mixture: little chains of every size floating in black liquid
+    const sp = $('#crudeSpecks');
+    const specks = [[34,388,3,20],[62,386,9,-15],[44,402,6,30],[72,404,2,0],[36,420,12,10],[66,422,5,-30],[50,438,16,5],[76,438,1,0],[30,440,4,40]];
+    specks.forEach(([x, y, c, a]) => {
+      const g = chainGroup(Math.min(beadCount(c), 9), 2.6, 1.5);
+      g.setAttribute('class', 'chain f-' + fracOf(c));
+      g.setAttribute('transform', `translate(${x} ${y}) rotate(${a})`);
+      sp.append(g);
+    });
+  })();
+
+  // ---------- state ----------
+  let heat = 400, playing = true, slow = false, raf = 0, last = 0, spawnT = 0;
+  const counts = { gas: 3, petrol: 5, naphtha: 5, kerosene: 6, diesel: 7, fueloil: 6, bitumen: 8 };
+  const mols = [];
+  let follow = null;          // { m, done, revealed, log:[], status }
+  let infoMode = 'intro';     // intro | fraction | tracker
+  let selected = null;
+  let captionMode = 'heat';   // heat | follow
+  const timeScale = () => slow ? 0.4 : 1;
+
+  const RISE = 50, FEED_SPEED = 75, TRAY_SPEED = 40, PIPE_SPEED = 55;
+  const DROP = 'M0,-6 C2.5,-2.5 4.5,-0.5 4.5,2 A4.5,4.5 0 1 1 -4.5,2 C-4.5,-0.5 -2.5,-2.5 0,-6Z';
+
+  function pickCarbon() {
+    let total = 0; ORDER.forEach(id => total += FR[id].w);
+    let r = Math.random() * total;
+    for (const id of ORDER) { r -= FR[id].w; if (r <= 0) return randInt(FR[id].cMin, FR[id].cMax); }
+    return 12;
+  }
+
+  function spawn(c, followed = false) {
+    const bp = BP[c], frac = fracOf(c), boils = bp < heat;
+    const n = beadCount(c), s = 3.4;
+    const g = svgEl('g', { class: `mol f-${frac}${followed ? ' is-followed' : ''}` });
+    const chain = chainGroup(n, s, 2.2);
+    const drop = svgEl('path', { class: 'drop', d: DROP, transform: 'scale(0)' });
+    g.append(chain, drop);
+    molLayer.append(g);
+    const base = followed ? 1.6 : 1;
+    const half = (n - 1) * s / 2 * base;
+    const m = {
+      c, bp, frac, boils, g, chain, drop, base, half, followed,
+      x: 118, y: 510, state: 'feed', t: 0, phase: rand(0, 6.28), rot: 0, sc: 1,
+      morph: boils ? 0 : 1, shown: -1, trayI: 0, zoneT: heat,
+      dropSize: 0.75 + Math.min(c, 26) / 40,
+      bx: boils ? rand(186 + half, 284 - half) : rand(200, 272), vy: 0
+    };
+    mols.push(m);
+    return m;
+  }
+
+  function moveAlongPath(m, dt) {
+    let left = m.speed * dt;
+    while (left > 0 && m.path.length) {
+      const [tx, ty] = m.path[0], dx = tx - m.x, dy = ty - m.y, d = Math.hypot(dx, dy);
+      if (d <= left) { m.x = tx; m.y = ty; m.path.shift(); left -= d; }
+      else { m.x += dx / d * left; m.y += dy / d * left; left = 0; }
+    }
+    return m.path.length === 0;
+  }
+
+  function update(m, dt) {
+    switch (m.state) {
+      case 'feed':
+        m.x += FEED_SPEED * dt;
+        if (m.x >= 190) { m.state = m.boils ? 'rise' : 'fall'; m.vy = 20; }
+        break;
+      case 'rise': {
+        m.t += dt; m.y -= RISE * dt;
+        const target = m.bx + Math.sin(m.t * 2 + m.phase) * 4;
+        m.x += (target - m.x) * Math.min(1, dt * 2);
+        m.rot = Math.sin(m.t * 1.4 + m.phase) * 24;
+        while (m.trayI < TRAYS.length && m.y <= TRAYS[m.trayI].y) {
+          const tr = TRAYS[m.trayI];
+          if (tr.T < m.bp) {
+            m.state = 'condense'; m.timer = 0; m.trayY = tr.y; m.y = tr.y - 6; m.zoneT = tr.T; m.dest = tr.id;
+            ev(m, 'condense', tr);
+            break;
+          }
+          m.zoneT = tr.T; m.trayI++;
+          ev(m, 'pass', tr);
+        }
+        if (m.state === 'rise' && m.trayI >= TRAYS.length && m.y <= 108) {
+          m.state = 'path'; m.path = [[235, 92], [235, 64], [235, 30], [322, 30]]; m.speed = PIPE_SPEED; m.dest = 'gas';
+          ev(m, 'top');
+        }
+        break;
+      }
+      case 'condense':
+        m.timer += dt;
+        m.morph = Math.min(1, m.timer / 0.45);
+        m.rot *= 1 - Math.min(1, dt * 6);
+        if (m.timer >= 0.5) { m.state = 'tray'; m.rot = 0; }
+        break;
+      case 'tray':
+        m.x += TRAY_SPEED * dt;
+        if (m.x >= 289) { m.state = 'path'; m.path = [[304, m.trayY - 5], [304, m.trayY + 16], [322, m.trayY + 16]]; m.speed = PIPE_SPEED; }
+        break;
+      case 'fall':
+        m.vy += 220 * dt; m.y += m.vy * dt;
+        m.x += (m.bx - m.x) * Math.min(1, dt * 3);
+        if (m.y >= 592) {
+          m.y = 592; m.state = 'path'; m.path = [[289, 596], [322, 598]]; m.speed = 38; m.dest = 'bitumen';
+          ev(m, 'pool');
+        }
+        break;
+      case 'path':
+        if (moveAlongPath(m, dt)) { m.state = 'shrink'; m.timer = 0; collect(m); }
+        break;
+      case 'shrink':
+        m.timer += dt; m.sc = Math.max(0, 1 - m.timer / 0.3);
+        if (m.timer >= 0.3) m.dead = true;
+        break;
+    }
+  }
+
+  function collect(m) {
+    counts[m.dest] = (counts[m.dest] || 0) + 1;
+    updateTanks();
+    if (m.followed) ev(m, 'end');
+  }
+
+  function updateTanks() {
+    const max = Math.max(24, ...Object.values(counts));
+    ORDER.forEach(id => {
+      const h = 38 * Math.min(1, counts[id] / max);
+      const t = tankEls[id];
+      t.el.setAttribute('y', (t.bottom - h).toFixed(1));
+      t.el.setAttribute('height', h.toFixed(1));
+    });
+  }
+
+  function step(dt) {
+    spawnT -= dt;
+    while (spawnT <= 0) { spawnT += 0.32; if (mols.length < 90) spawn(pickCarbon()); }
+    for (const m of mols) update(m, dt);
+    for (let i = mols.length - 1; i >= 0; i--) if (mols[i].dead) { mols[i].g.remove(); mols.splice(i, 1); }
+  }
+
+  function render() {
+    for (const m of mols) {
+      m.g.setAttribute('transform', `translate(${m.x.toFixed(1)} ${m.y.toFixed(1)}) rotate(${m.rot.toFixed(1)}) scale(${(m.base * m.sc).toFixed(3)})`);
+      if (m.shown !== m.morph) {
+        m.chain.setAttribute('opacity', (1 - m.morph).toFixed(2));
+        m.drop.setAttribute('transform', `scale(${(m.dropSize * m.morph).toFixed(3)})`);
+        m.shown = m.morph;
+      }
+    }
+    if (follow && follow.m && !follow.m.dead) {
+      const m = follow.m;
+      const r = m.morph > 0.5 ? 13 : Math.max(14, m.half + 8);
+      ring.setAttribute('cx', m.x.toFixed(1)); ring.setAttribute('cy', m.y.toFixed(1)); ring.setAttribute('r', r.toFixed(1));
+    } else ring.classList.add('is-off');
+  }
+
+  function frame(ts) {
+    if (!playing) return;
+    const dt = last ? Math.min(0.05, (ts - last) / 1000) : 0;
+    last = ts;
+    step(dt * timeScale());
+    render();
+    raf = requestAnimationFrame(frame);
+  }
+  function play() { if (playing) return; playing = true; last = 0; playBtn.textContent = L().pause; raf = requestAnimationFrame(frame); }
+  function pause() { playing = false; cancelAnimationFrame(raf); playBtn.textContent = L().play; }
+  function setSlow(v) { slow = v; slowBtn.setAttribute('aria-pressed', String(v)); }
+
+  // ---------- heat ----------
+  function heatMessage() {
+    const F = heat, list = L().list;
+    const full = [], part = [], stay = [];
+    ORDER.forEach(id => {
+      const lo = BP[FR[id].cMin], hi = BP[FR[id].cMax], name = T(id).lower;
+      if (hi < F) full.push(name); else if (lo < F) part.push(name); else stay.push(name);
+    });
+    if (lang === 'th') {
+      if (F >= 400) return `ที่ ${fmtT(F)} น้ำมันดิบเกือบทั้งหมดเดือดกลายเป็นไอและลอยขึ้นหอ มีแค่ยางมะตอยซึ่งมีโมเลกุลใหญ่ที่สุด ที่ยังเป็นของเหลวและจมลงก้นหอ`;
+      if (full.length === 1 && !part.length) return `ที่ ${fmtT(F)} มีแค่โมเลกุลแก๊สตัวจิ๋วที่หนีออกไปได้ ที่เหลือยังเป็นของเหลวและจมลงก้นหอ ลองเพิ่มความร้อนดูสิ!`;
+      let s = `ที่ ${fmtT(F)} ${list(full)} เดือดและลอยขึ้นหอ`;
+      if (part.length) s += ` และมี${list(part)}บางส่วนเดือดด้วย`;
+      return s + ` ส่วน${list(stay)} ยังเป็นของเหลวและจมลงก้นหอ`;
+    }
+    if (F >= 400) return `At ${fmtT(F)}, almost all of the crude oil boils into a gas and rises up the tower. Only bitumen, with the biggest molecules, stays liquid and sinks to the bottom.`;
+    if (full.length === 1 && !part.length) return `At ${fmtT(F)}, only the tiny gas molecules escape. Everything else stays liquid and sinks to the bottom. Turn up the heat!`;
+    let s = `At ${fmtT(F)}, ${list(full)} boil and rise up the tower`;
+    if (part.length) s += `, and some ${list(part)} boils too`;
+    return s + `. ${cap(list(stay))} ${stay.length > 1 ? 'stay liquid and sink' : 'stays liquid and sinks'} to the bottom.`;
+  }
+  function renderCaption() {
+    if (captionMode === 'follow' && follow && follow.log.length) {
+      captionText.innerHTML = `<b>${L().following}</b> ${narr(follow.log[follow.log.length - 1])}`;
+      caption.classList.add('is-follow');
+    } else {
+      captionMode = 'heat';
+      captionText.innerHTML = heatMessage();
+      caption.classList.remove('is-follow');
+    }
+  }
+  function applyHeat() {
+    heat = Number(heatInput.value);
+    const p = (heat - 20) / 380;
+    heatOut.textContent = fmtT(heat);
+    heatOut.style.setProperty('--p', Math.round(p * 100) + '%');
+    furnaceRead.textContent = fmtT(heat);
+    const k = heat <= 20 ? 0.001 : 0.25 + 0.75 * p;
+    flames.setAttribute('transform', `translate(70 580) scale(${k.toFixed(3)})`);
+    colHeat.style.opacity = (0.15 + 0.85 * p).toFixed(2);
+  }
+  let capTimer = 0;
+  heatInput.addEventListener('input', () => {
+    applyHeat();
+    clearTimeout(capTimer);
+    capTimer = setTimeout(() => { if (!follow || follow.done) { captionMode = 'heat'; renderCaption(); } }, 120);
+  });
+
+  // ---------- controls ----------
+  playBtn.addEventListener('click', () => playing ? pause() : play());
+  slowBtn.addEventListener('click', () => setSlow(!slow));
+  followBtn.addEventListener('click', () => startFollow(null));
+
+  // ---------- step highlights ----------
+  const stepBtns = [...document.querySelectorAll('.step')];
+  stepBtns.forEach(b => b.addEventListener('click', () => {
+    const on = b.getAttribute('aria-pressed') !== 'true';
+    stepBtns.forEach(x => x.setAttribute('aria-pressed', 'false'));
+    sim.querySelectorAll('[data-part]').forEach(el => el.classList.remove('lit'));
+    if (on) {
+      b.setAttribute('aria-pressed', 'true');
+      sim.querySelectorAll(`[data-part="${b.dataset.part}"]`).forEach(el => el.classList.add('lit'));
+    }
+  }));
+
+  // ---------- outlets ----------
+  ORDER.forEach(id => {
+    const g = outletEls[id].g;
+    const go = () => showFraction(id);
+    g.addEventListener('click', go);
+    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+  function labelOutlets() {
+    ORDER.forEach(id => {
+      const o = outletEls[id], t = T(id);
+      o.t1.textContent = t.label;
+      o.t2.textContent = t.useShort;
+      o.g.setAttribute('aria-label', L().outletAria(t.name));
+    });
+  }
+  function markOutlet(id) { ORDER.forEach(k => outletEls[k].g.classList.toggle('is-selected', k === id)); }
+
+  // ---------- info card ----------
+  function renderIntro() {
+    infoMode = 'intro'; selected = null; markOutlet(null);
+    const u = L();
+    info.innerHTML = `
+      <p class="kicker">${u.introK}</p>
+      <h2 class="card-h">${u.introH}</h2>
+      <p>${u.introP}</p>
+      <div class="chips">${ORDER.map(id => `<button class="chip f-${id}" type="button" data-act="select" data-frac="${id}"><span class="sw"></span>${T(id).name}</button>`).join('')}</div>`;
+  }
+  function showFraction(id) {
+    if (follow) endFollowView();
+    infoMode = 'fraction'; selected = id; markOutlet(id);
+    const f = T(id), u = L();
+    info.innerHTML = `
+      <button class="link-btn" type="button" data-act="intro">${u.back}</button>
+      <h2 class="card-h f-${id}"><span class="sw sw-lg"></span>${f.name}${f.alt ? ` <span class="alt">(${f.alt})</span>` : ''}</h2>
+      <div>${chainSVG(FR[id].repC, id)}</div>
+      <dl class="facts">
+        <div><dt>${u.carbon}</dt><dd>${f.cText}</dd></div>
+        <div><dt>${u.boils}</dt><dd>${f.bpText}</dd></div>
+        <div><dt>${u.where}</dt><dd>${f.whereLong}</dd></div>
+        <div><dt>${u.look}</dt><dd>${f.look}</dd></div>
+      </dl>
+      <div class="use">${iconSVG(FR[id].icon)}<p><b>${u.used}</b> ${f.use}</p></div>
+      <p class="didyou"><b>${u.didyou}</b> ${f.fact}</p>
+      <div class="btn-row"><button class="btn btn-primary" type="button" data-act="follow" data-frac="${id}">${u.followX(f.single || f.name)}</button></div>`;
+  }
+  info.addEventListener('click', e => {
+    const b = e.target.closest('[data-act]');
+    if (!b) return;
+    const act = b.dataset.act;
+    if (act === 'intro') { if (follow) endFollowView(); renderIntro(); }
+    else if (act === 'select') showFraction(b.dataset.frac);
+    else if (act === 'follow') {
+      startFollow(b.dataset.frac || null);
+      if (window.matchMedia('(max-width: 900px)').matches) sim.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+    }
+  });
+
+  // ---------- follow a molecule ----------
+  function endFollowView() {
+    if (follow && follow.m) { follow.m.followed = false; follow.m.base = 1; follow.m.g.classList.remove('is-followed'); }
+    follow = null;
+    sim.classList.remove('following');
+    ring.classList.add('is-off');
+    captionMode = 'heat';
+    renderCaption();
+  }
+  function startFollow(fracId) {
+    if (follow) endFollowView();
+    selected = null; markOutlet(null);
+    const c = fracId ? randInt(FR[fracId].cMin, FR[fracId].cMax) : pickCarbon();
+    const m = spawn(c, true);
+    follow = { m, done: false, revealed: false, log: [], status: m.boils ? 'gas' : 'liquid' };
+    sim.classList.add('following');
+    ring.classList.remove('is-off');
+    if (!slow) setSlow(true);
+    renderTracker();
+    ev(m, 'start');
+    if (!playing) play();
+  }
+
+  // Narration: built from stored event data so it can be re-rendered in either language
+  function narr(e) {
+    const d = e.d, bp = fmtT(d.bp), f = T(d.frac), th = lang === 'th';
+    switch (e.type) {
+      case 'start':
+        if (th) return d.boils
+          ? `ฉันเป็นโมเลกุลที่มีคาร์บอน ${d.c} อะตอม จุดเดือดของฉันคือ ${bp} เตาเผาร้อน ${fmtT(d.F)} ซึ่งร้อนกว่า ฉันจึงเดือดและกลายเป็นไอ!`
+          : `ฉันเป็นโมเลกุลที่มีคาร์บอน ${d.c} อะตอม จุดเดือดของฉันคือ ${bp} แต่เตาเผาร้อนแค่ ${fmtT(d.F)} ยังไม่ร้อนพอ ฉันจึงยังเป็นของเหลว`;
+        return d.boils
+          ? `I'm a molecule with ${d.c} carbon atom${d.c > 1 ? 's' : ''}. I boil at ${bp}. The furnace is ${fmtT(d.F)}, which is hotter, so I boil and turn into a gas!`
+          : `I'm a molecule with ${d.c} carbon atoms. I boil at ${bp}, but the furnace is only ${fmtT(d.F)}. That's not hot enough, so I stay a liquid.`;
+      case 'pass':
+        return th ? `ถาดนี้ร้อน ${fmtT(d.T)} ยังร้อนกว่าจุดเดือดของฉัน ฉันจึงยังเป็นไอ และลอยผ่านรูขึ้นไปข้างบน`
+                  : `This tray is ${fmtT(d.T)}. That's still hotter than my boiling point, so I stay a gas and float up through the holes.`;
+      case 'condense':
+        return th ? `ถาดนี้ร้อนแค่ ${fmtT(d.T)} เย็นกว่าจุดเดือดของฉัน (${bp}) ฉันจึงควบแน่นกลายเป็นของเหลว! นี่คือถาดของ${f.lower}`
+                  : `This tray is only ${fmtT(d.T)}. That's cooler than my boiling point (${bp}), so I condense into a liquid! This is the ${f.lower} tray.`;
+      case 'top':
+        return th ? `แม้แต่ถาดบนสุด (30°C) ก็ยังร้อนกว่าจุดเดือดของฉัน (${bp}) ฉันยังเป็นแก๊ส จึงลอยออกทางยอดหอ`
+                  : `Even the top tray (30°C) is warmer than my boiling point (${bp}). I'm still a gas, so I float out of the top of the tower.`;
+      case 'pool':
+        if (d.frac === 'bitumen') return th ? 'ฉันใหญ่เกินกว่าจะเดือด ฉันจึงจมลงก้นหอและไหลออกทางด้านล่าง' : `I'm too big to boil. I sink to the bottom of the tower and drain out.`;
+        return th ? 'ฉันไม่เดือด จึงจมลงก้นหอไปพร้อมกับยางมะตอย' : `I didn't boil, so I sink to the bottom of the tower with the bitumen.`;
+      case 'end':
+        if (d.dest === 'gas') return th ? `ฉันไปถึงถังเก็บแก๊สแล้ว ฉันเป็นส่วนหนึ่งของแก๊สปิโตรเลียม! ${f.endLine}` : `I made it into the gas tank. I'm part of the refinery gases! ${f.endLine}`;
+        if (d.dest === d.frac) return th ? `ฉันไหลออกทางท่อไปยังถังเก็บ ฉันเป็นส่วนหนึ่งของ${f.lower}! ${f.endLine}` : `I flow out through the pipe into a tank. I'm part of the ${f.lower} fraction! ${f.endLine}`;
+        return th ? `ฉันไปอยู่ในถังด้านล่างกับยางมะตอย ถ้าเตาเผาร้อนกว่า ${bp} ฉันจะเดือดและกลายเป็น${f.lower} ลองเพิ่มความร้อนดูสิ!`
+                  : `I end up in the bottom tank with the bitumen. If the furnace were hotter than ${bp}, I would boil and become part of the ${f.lower}. Try turning up the heat!`;
+    }
+    return '';
+  }
+  const ltLabel = e => e.tl === 'tank' ? L().ltTank : e.tl === 'bottom' ? L().ltBottom : fmtT(e.tl);
+
+  function renderTracker() {
+    infoMode = 'tracker';
+    const m = follow.m, u = L();
+    info.innerHTML = `
+      <div class="trk-head"><p class="kicker">${u.trkK}</p><span class="status" id="trkStatus"></span></div>
+      <h2 class="card-h" id="trkTitle"></h2>
+      <div>${chainSVG(m.c, m.frac)}</div>
+      <dl class="facts">
+        <div><dt>${u.carbon}</dt><dd>${m.c}</dd></div>
+        <div><dt>${u.myBp}</dt><dd>${fmtT(m.bp)}</dd></div>
+      </dl>
+      <div class="compare" aria-hidden="true"><div class="cmp-track"><span class="cmp-bp" id="cmpBp"></span><span class="cmp-here" id="cmpHere"></span></div></div>
+      <p class="verdict" id="trkVerdict"></p>
+      <ol class="log" id="trkLog" aria-live="polite">${follow.log.map(e => `<li><span class="lt">${ltLabel(e)}</span><span>${narr(e)}</span></li>`).join('')}</ol>
+      <div class="btn-row"><button class="btn btn-primary" type="button" data-act="follow">${u.another}</button><button class="btn" type="button" data-act="intro">${u.stop}</button></div>`;
+    updateTracker();
+  }
+  const pct = t => clamp((t + 60) / 520 * 100, 4, 96);
+  function placeMarker(el, t, label) {
+    const p = pct(t);
+    el.style.left = p + '%';
+    el.dataset.label = label;
+    el.dataset.align = p < 22 ? 'start' : p > 78 ? 'end' : 'mid';
+  }
+  function updateTracker() {
+    if (!follow || infoMode !== 'tracker') return;
+    const m = follow.m, u = L(), status = follow.status;
+    const title = $('#trkTitle'), st = $('#trkStatus'), v = $('#trkVerdict');
+    if (!title) return;
+    const unboiled = m.dest === 'bitumen' && m.frac !== 'bitumen';
+    title.textContent = !follow.revealed ? u.mystery : unboiled ? u.unboiled : u.molOf(T(m.frac).single || T(m.frac).name);
+    st.className = 'status ' + status;
+    st.textContent = status === 'gas' ? u.stGas : status === 'liquid' ? u.stLiquid : u.stDone;
+    placeMarker($('#cmpBp'), m.bp, u.boilsAt(fmtT(m.bp)));
+    placeMarker($('#cmpHere'), m.zoneT, u.here(fmtT(m.zoneT)));
+    const hotter = m.zoneT > m.bp;
+    v.className = 'verdict ' + (hotter ? 'gas' : 'liquid');
+    v.textContent = hotter ? u.hotter(fmtT(m.zoneT), fmtT(m.bp)) : u.cooler(fmtT(m.zoneT), fmtT(m.bp));
+  }
+  function ev(m, type, tr) {
+    if (!m.followed || !follow || follow.m !== m) return;
+    const e = { type, tl: m.zoneT, d: { c: m.c, bp: m.bp, frac: m.frac, boils: m.boils, F: heat, T: tr ? tr.T : null, dest: m.dest } };
+    switch (type) {
+      case 'start': e.tl = heat; follow.status = m.boils ? 'gas' : 'liquid'; break;
+      case 'pass': follow.status = 'gas'; break;
+      case 'condense': follow.revealed = true; follow.status = 'liquid'; break;
+      case 'top': e.tl = 30; follow.status = 'gas'; break;
+      case 'pool': e.tl = 'bottom'; follow.status = 'liquid'; break;
+      case 'end':
+        follow.revealed = true; follow.done = true; follow.status = 'done'; e.tl = 'tank';
+        setTimeout(() => { if (follow && follow.m === m) { sim.classList.remove('following'); ring.classList.add('is-off'); } }, 1500);
+        break;
+    }
+    follow.log.push(e);
+    const log = $('#trkLog');
+    if (log && infoMode === 'tracker') {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="lt">${ltLabel(e)}</span><span>${narr(e)}</span>`;
+      log.append(li);
+      log.scrollTop = log.scrollHeight;
+    }
+    captionMode = 'follow';
+    renderCaption();
+    updateTracker();
+  }
+
+  // ---------- fractions list + rule chains ----------
+  function renderFractionList() {
+    const u = L();
+    $('#fracList').innerHTML = ORDER.map(id => {
+      const f = T(id);
+      return `<li class="frow f-${id}">
+        <div class="f-name"><span class="sw sw-lg"></span><div><h3>${f.name}</h3><p>${f.where}</p></div></div>
+        <div class="f-chain">${chainSVG(FR[id].repC, id, 7, 3.8)}</div>
+        <dl class="f-nums"><div><dt>${u.carbon}</dt><dd>${f.cText}</dd></div><div><dt>${u.boils}</dt><dd>${f.bpText}</dd></div></dl>
+        <div class="f-use">${iconSVG(FR[id].icon)}<span>${f.use}</span></div>
+      </li>`;
+    }).join('');
+  }
+  $('#ruleSmall').innerHTML = chainSVG(3, 'gas');
+  $('#ruleBig').innerHTML = chainSVG(22, 'fueloil');
+
+  // ---------- quiz ----------
+  const QUIZ = [
+    { a: 2,
+      en: { q: 'Where is the tower hottest?', opts: ['At the top', 'In the middle', 'At the bottom'],
+        why: 'Hot vapor from the furnace comes in at the bottom. It cools as it rises, so the bottom is hottest and the top is coolest.' },
+      th: { q: 'หอกลั่นร้อนที่สุดตรงไหน?', opts: ['ด้านบน', 'ตรงกลาง', 'ด้านล่าง'],
+        why: 'ไอร้อนจากเตาเผาเข้ามาทางด้านล่าง และเย็นลงเมื่อลอยขึ้น ด้านล่างจึงร้อนที่สุด และด้านบนเย็นที่สุด' } },
+    { type: 'tower', c: 3, a: 'gas',
+      en: { q: 'This molecule has 3 carbon atoms and boils at −42°C. Where does it come out of the tower?',
+        why: 'It is so small that it is still a gas at the coolest tray (30°C). It floats out of the top with the refinery gases.' },
+      th: { q: 'โมเลกุลนี้มีคาร์บอน 3 อะตอม และมีจุดเดือด −42°C จะออกมาจากหอตรงไหน?',
+        why: 'โมเลกุลนี้เล็กมาก จนยังเป็นแก๊สแม้ที่ถาดที่เย็นที่สุด (30°C) จึงลอยออกทางยอดหอไปกับแก๊สปิโตรเลียม' } },
+    { a: 1,
+      en: { q: 'Which molecule is bigger, with a longer chain of carbon atoms?', opts: ['A petrol molecule', 'A diesel molecule'],
+        why: 'Diesel molecules have about 15–19 carbon atoms. Petrol molecules have about 5–7. Bigger molecules have higher boiling points, so diesel comes out lower in the tower.' },
+      th: { q: 'โมเลกุลไหนใหญ่กว่า หรือมีสายโซ่อะตอมคาร์บอนยาวกว่า?', opts: ['โมเลกุลน้ำมันเบนซิน', 'โมเลกุลน้ำมันดีเซล'],
+        why: 'โมเลกุลน้ำมันดีเซลมีคาร์บอนประมาณ 15–19 อะตอม ส่วนน้ำมันเบนซินมีประมาณ 5–7 อะตอม โมเลกุลที่ใหญ่กว่ามีจุดเดือดสูงกว่า น้ำมันดีเซลจึงออกมาที่ชั้นต่ำกว่า' } },
+    { type: 'tower', c: 12, a: 'kerosene',
+      en: { q: 'This molecule has 12 carbon atoms and boils at 216°C. Where does it turn back into a liquid?',
+        why: 'The 340°C and 260°C trays are hotter than 216°C, so it stays a gas. The 180°C tray is cooler, so it condenses there. That tray collects kerosene.' },
+      th: { q: 'โมเลกุลนี้มีคาร์บอน 12 อะตอม และมีจุดเดือด 216°C จะกลับมาเป็นของเหลวที่ไหน?',
+        why: 'ถาด 340°C และ 260°C ร้อนกว่า 216°C โมเลกุลจึงยังเป็นไอ แต่ถาด 180°C เย็นกว่า จึงควบแน่นที่ถาดนั้น ซึ่งเป็นถาดที่เก็บน้ำมันก๊าด' } },
+    { a: 1,
+      en: { q: 'What do we call it when a gas cools down and turns back into a liquid?', opts: ['Evaporating', 'Condensing', 'Melting', 'Freezing'],
+        why: 'Condensing is gas turning into liquid. Evaporating is the opposite: liquid turning into gas.' },
+      th: { q: 'เมื่อแก๊สเย็นลงแล้วกลับมาเป็นของเหลว เรียกว่าอะไร?', opts: ['การระเหย', 'การควบแน่น', 'การหลอมเหลว', 'การแข็งตัว'],
+        why: 'การควบแน่นคือแก๊สกลายเป็นของเหลว ส่วนการระเหยตรงกันข้าม คือของเหลวกลายเป็นแก๊ส' } },
+    { a: 2,
+      en: { q: 'Which fraction is used to make roads?', opts: ['Petrol', 'Kerosene', 'Bitumen', 'Refinery gases'],
+        why: 'Bitumen is the thick, sticky, black part that drains from the bottom. Mixed with small stones, it makes road surfaces.' },
+      th: { q: 'ส่วนกลั่นไหนใช้ทำถนน?', opts: ['น้ำมันเบนซิน', 'น้ำมันก๊าด', 'ยางมะตอย', 'แก๊สปิโตรเลียม'],
+        why: 'ยางมะตอยเป็นส่วนที่ข้น เหนียว และมีสีดำ ไหลออกทางก้นหอ เมื่อผสมกับหินก้อนเล็ก ๆ จะใช้ทำผิวถนน' } },
+    { a: 1,
+      en: { q: 'The furnace is turned down to 200°C. Diesel boils at 260–340°C. What happens to the diesel?', opts: ['It boils and rises up the tower', 'It stays liquid and sinks to the bottom', 'It turns into petrol'],
+        why: '200°C is not hot enough to boil diesel, so it stays a liquid and sinks to the bottom. Try it with the heat slider at the top of the page!' },
+      th: { q: 'ลดความร้อนของเตาเผาลงเหลือ 200°C น้ำมันดีเซลเดือดที่ 260–340°C จะเกิดอะไรขึ้นกับน้ำมันดีเซล?', opts: ['เดือดและลอยขึ้นหอ', 'ยังเป็นของเหลวและจมลงก้นหอ', 'กลายเป็นน้ำมันเบนซิน'],
+        why: '200°C ยังไม่ร้อนพอที่จะทำให้น้ำมันดีเซลเดือด มันจึงยังเป็นของเหลวและจมลงก้นหอ ลองใช้แถบปรับความร้อนด้านบนดูสิ!' } }
+  ];
+  let qi = 0, score = 0, chosen = null;
+  const qBody = $('#qBody'), qProg = $('#qProg');
+  function renderQ() {
+    const u = L();
+    if (qi >= QUIZ.length) {
+      qProg.textContent = u.qDone;
+      const msg = score === QUIZ.length ? u.qPerfect : score >= 5 ? u.qGood : u.qTry;
+      qBody.innerHTML = `<p class="q-score">${u.qScore(score, QUIZ.length)}</p><p>${msg}</p><div class="btn-row"><button class="btn btn-primary" type="button" data-q="restart">${u.qAgain}</button></div>`;
+      return;
+    }
+    const q = QUIZ[qi], qt = q[lang], correctV = String(q.a), answered = chosen !== null;
+    qProg.textContent = u.qProg(qi + 1, QUIZ.length, score);
+    const cls = v => !answered ? '' : v === correctV ? ' is-right' : v === chosen ? ' is-wrong' : '';
+    const dis = answered ? ' disabled' : '';
+    let html = `<p class="q-text">${qt.q}</p>`;
+    if (q.c) html += `<div class="q-chain">${chainSVG(q.c, 'neutral')}</div>`;
+    if (q.type === 'tower') {
+      html += `<div class="q-tower" role="group" aria-label="${u.towerAria}">${ORDER.map(id => `<button class="q-opt f-${id}${cls(id)}" type="button" data-q="ans" data-v="${id}"${dis}><span class="sw"></span>${T(id).name}<small>${T(id).where}</small></button>`).join('')}</div>`;
+    } else {
+      html += `<div class="q-opts">${qt.opts.map((o, i) => `<button class="q-opt${cls(String(i))}" type="button" data-q="ans" data-v="${i}"${dis}>${o}</button>`).join('')}</div>`;
+    }
+    if (answered) {
+      const ok = chosen === correctV;
+      html += `<div class="q-feedback ${ok ? 'ok' : 'no'}"><b>${ok ? u.qRight : u.qWrong}</b><p>${qt.why}</p><div class="btn-row" style="margin-top:8px"><button class="btn btn-primary" type="button" data-q="next">${qi + 1 < QUIZ.length ? u.qNext : u.qSee}</button></div></div>`;
+    }
+    qBody.innerHTML = html;
+  }
+  qBody.addEventListener('click', e => {
+    const b = e.target.closest('[data-q]');
+    if (!b) return;
+    if (b.dataset.q === 'restart') { qi = 0; score = 0; chosen = null; renderQ(); return; }
+    if (b.dataset.q === 'next') { qi++; chosen = null; renderQ(); qBody.querySelector('button')?.focus(); return; }
+    if (b.dataset.q !== 'ans' || chosen !== null) return;
+    chosen = b.dataset.v;
+    if (chosen === String(QUIZ[qi].a)) score++;
+    renderQ();
+    qBody.querySelector('[data-q="next"]')?.focus();
+  });
+
+  // ---------- language switching ----------
+  const langBtns = [...document.querySelectorAll('.lang button')];
+  function applyLang(next, save) {
+    lang = next === 'th' ? 'th' : 'en';
+    document.documentElement.lang = lang;
+    document.title = L().docTitle;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.dataset.i18n;
+      el.innerHTML = (lang === 'th' && TH_DOM[k] != null) ? TH_DOM[k] : EN_DOM[k];
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+      const k = el.dataset.i18nAria;
+      el.setAttribute('aria-label', (lang === 'th' && TH_ARIA[k]) ? TH_ARIA[k] : EN_ARIA[k]);
+    });
+    langBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    playBtn.textContent = playing ? L().pause : L().play;
+    labelOutlets();
+    renderFractionList();
+    if (infoMode === 'tracker' && follow) renderTracker();
+    else if (infoMode === 'fraction' && selected) showFraction(selected);
+    else renderIntro();
+    renderQ();
+    renderCaption();
+    if (save) {
+      try { localStorage.setItem('fdl-lang', lang); } catch (e) {}
+      try { history.replaceState(null, '', '#' + lang); } catch (e) {}
+    }
+    document.dispatchEvent(new Event('fdl:lang'));
+  }
+  langBtns.forEach(b => b.addEventListener('click', () => applyLang(b.dataset.lang, true)));
+  window.addEventListener('hashchange', () => {
+    const h = location.hash.slice(1);
+    if ((h === 'th' || h === 'en') && h !== lang) applyLang(h, false);
+  });
+  function initialLang() {
+    const h = location.hash.slice(1);
+    if (h === 'th' || h === 'en') return h;
+    try { const s = localStorage.getItem('fdl-lang'); if (s === 'th' || s === 'en') return s; } catch (e) {}
+    return (navigator.language || '').toLowerCase().startsWith('th') ? 'th' : 'en';
+  }
+
+  // ---------- boot ----------
+  applyHeat();
+  for (let i = 0; i < 400; i++) step(1 / 30);   // fast-forward so the tower opens mid-run
+  updateTanks();
+  render();
+  applyLang(initialLang(), false);
+  if (reduceMotion) { playing = false; playBtn.textContent = L().play; }
+  else { playing = false; play(); }
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const stage = document.getElementById('stage');
+  if (!stage) return;
+  const canvas = document.getElementById('c3d'), overlay = document.getElementById('overlay3d');
+  const partInfo = document.getElementById('partInfo'), partList = document.getElementById('partList');
+  const viewBtns = [...document.querySelectorAll('.seg [data-view]')];
+  const cutBtn = document.getElementById('cutBtn'), flowBtn = document.getElementById('flowBtn'), resetBtn = document.getElementById('resetBtn');
+  const zinBtn = document.getElementById('zoomIn'), zoutBtn = document.getElementById('zoomOut');
+  const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const lang = () => document.documentElement.lang === 'th' ? 'th' : 'en';
+
+  const TXT = {
+    en: {
+      pause: 'Pause flow', play: 'Play flow',
+      noGL: 'The 3D model could not start on this device. You can still read about every part in the list.',
+      partOf: (i, n) => `Part ${i} of ${n}`, back: '← Back to overview',
+      kTower: 'Whole tower', kTray: 'One tray up close',
+      introTower: { h: 'A real crude oil tower, cut in half',
+        p: 'Drag to turn the model. Tap a numbered dot, or a part in the list, to see what it does. The moving dots are the oil: each fraction rises as vapor and leaves through its own pipe.' },
+      introTray: { h: 'A real draw-off tray, step by step',
+        steps: ['Hot vapor from the tray below rises up through the riser. It carries light molecules (blue) and heavy molecules (orange).',
+          'The bubble cap turns the vapor around and pushes it out through the slots as bubbles in the liquid.',
+          'Heavy molecules in the bubbles cool down and condense into the liquid. Light molecules stay as gas and rise to the next tray.',
+          'The hot bubbles also boil a few light molecules out of the liquid, and they join the vapor going up.',
+          'Liquid spills over the weir and pours down the downcomer to the tray below.',
+          'Here, liquid from the upper tray\'s downcomer collects in a sump. A side pipe takes part of it out as kerosene. The rest spills over onto the lower tray.'],
+        p: 'A real tower has 30 to 50 trays. Only 3 to 6 are draw-off trays like this one. The others do steps 1 to 5 only, and each one makes the sorting a little sharper.' },
+      lightDot: 'light molecule (gas)', heavyDot: 'heavy molecule (gas)', liquidDot: 'liquid',
+      parts: {
+        tower: [
+          ['Furnace', 'Crude oil is pumped through long pipes inside a furnace and heated to 350–400°C. Most of it turns into vapor before it even reaches the tower. The tall chimney carries the smoke away.'],
+          ['Feed inlet', 'The hot mix of vapor and liquid shoots into the tower near the bottom. The vapor rushes upward. The heaviest liquid falls to the bottom.'],
+          ['Trays', 'A real tower has 30 to 50 metal trays stacked inside, like the floors of a building. This model shows 14 so they are easy to see. Each tray is a little cooler than the one below it. Most are ordinary trays that pass vapor up and liquid down. Only a few are draw-off trays with a side pipe.'],
+          ['Bubble caps', 'Each tray is covered with small upside-down cups called bubble caps. Vapor from below has to bubble through the liquid sitting on the tray. This is where the sorting happens. Switch to One tray up close to see it.'],
+          ['Downcomers', 'Liquid that collects on a tray spills over a low wall and pours down a channel called a downcomer to the tray below. Liquid goes down while vapor goes up, and they meet on every tray.'],
+          ['Side draw-off pipes', 'Only a few trays, usually 3 to 6 out of 30 to 50, have a pipe that takes liquid out. These are draw-off trays. The liquid collects in a small well called a sump, and the pipe takes part of it out as a product, such as kerosene or diesel. The rest keeps flowing down the tower. The higher the pipe, the lighter the fraction. See one working in One tray up close.'],
+          ['Condenser', 'The lightest vapor leaves through the very top. It passes through a condenser, where cold water flowing in tubes takes away its heat, so most of it turns into liquid.'],
+          ['Reflux drum and pump', 'The liquid collects in a drum. Gas that never condenses leaves from the top of the drum. A pump sends some of the liquid out as petrol and pumps the rest back into the top of the tower. This is called reflux. It keeps the top of the tower cool and makes the sorting sharper.'],
+          ['Steam inlet', 'Hot steam is blown into the bottom of the tower. It helps pull the last small molecules out of the heavy liquid at the bottom.'],
+          ['Bottom outlet', 'The heaviest liquid, which never boiled, drains out of the bottom. It is used to make bitumen for roads, or sent to another tower to be split further.'],
+          ['Steel shell and insulation', 'The tower is made of thick steel. A real one is about 50 metres tall, as high as a 15-storey building. A thick layer of insulation (yellow) under shiny metal sheets keeps the heat inside.'],
+          ['Platforms, ladder and manholes', 'Workers climb the ladder to platforms to check gauges and valves. Round doors called manholes let them climb inside when the tower is shut down for cleaning. Find the tiny worker in the yellow hard hat to see how big the tower is.']
+        ],
+        tray: [
+          ['Vapor from below', 'Hot vapor from the tray below pushes upward. It is a mix of light molecules (blue) and heavy molecules (orange).'],
+          ['Riser (chimney)', 'The vapor goes up through a short pipe called a riser. The riser sticks up above the liquid, so the liquid cannot drain down through it.'],
+          ['Bubble cap', 'The cap works like an upside-down cup. It turns the vapor around and pushes it back down into the liquid.'],
+          ['Slots', 'The vapor escapes through small slots around the bottom of the cap and breaks into lots of little bubbles.'],
+          ['Liquid on the tray', 'The bubbles touch the cooler liquid. Heavy molecules (orange) cool down and condense into the liquid. At the same time, the hot bubbles boil a few light molecules (blue) out of the liquid. Light molecules float up to the next tray, so each tray sorts the oil a little more.'],
+          ['Weir', 'A low wall at the edge of the tray, called a weir, keeps a layer of liquid on the tray. Extra liquid spills over the top.'],
+          ['Downcomer', 'The liquid that spills over falls down this channel to the tray below.'],
+          ['Downcomer from the tray above', 'Liquid from the upper tray pours down this channel. Its bottom edge dips into the liquid in the sump. The liquid seals it, so vapor cannot sneak up the wrong way.'],
+          ['Draw-off sump', 'On a draw-off tray, the liquid collects in a small well called a sump before it moves on. The side pipe takes its liquid from here.'],
+          ['Side draw-off pipe', 'A pipe through the tower wall takes part of the liquid out of the sump. This liquid is a product, here kerosene, and it goes to a tank. The rest spills over the edge of the sump onto the lower tray and keeps going down the tower. Only 3 to 6 of the 30 to 50 trays have a pipe like this.']
+        ]
+      },
+      tags: { crude: 'Crude oil in', steam: 'Steam', gas: 'Gas', petrol: 'Petrol', naphtha: 'Naphtha · 120°C', kerosene: 'Kerosene · 180°C', diesel: 'Diesel · 260°C', fueloil: 'Fuel oil · 340°C', bitumen: 'Bitumen', upper: 'Upper tray · a bit cooler', lower: 'Lower tray · a bit hotter', draw: 'To kerosene tank' }
+    },
+    th: {
+      pause: 'หยุดการไหล', play: 'เล่นการไหล',
+      noGL: 'โมเดล 3 มิติเปิดบนอุปกรณ์นี้ไม่ได้ แต่ยังอ่านข้อมูลของทุกชิ้นส่วนได้จากรายการ',
+      partOf: (i, n) => `ชิ้นส่วนที่ ${i} จาก ${n}`, back: '← กลับไปภาพรวม',
+      kTower: 'หอทั้งหอ', kTray: 'ส่องถาดหนึ่งชั้น',
+      introTower: { h: 'หอกลั่นน้ำมันดิบของจริง ผ่าครึ่งให้เห็นข้างใน',
+        p: 'ลากเพื่อหมุนโมเดล แตะจุดตัวเลขหรือชื่อชิ้นส่วนในรายการ เพื่อดูว่าแต่ละส่วนทำหน้าที่อะไร จุดที่เคลื่อนที่คือน้ำมัน ส่วนกลั่นแต่ละชนิดลอยขึ้นเป็นไอ แล้วออกทางท่อของตัวเอง' },
+      introTray: { h: 'ถาดดึงส่วนกลั่นของจริง ทีละขั้น',
+        steps: ['ไอร้อนจากถาดชั้นล่างลอยขึ้นผ่านท่อไรเซอร์ ไอนี้มีทั้งโมเลกุลเบา (สีฟ้า) และโมเลกุลหนัก (สีส้ม)',
+          'ถ้วยครอบทำให้ไอเลี้ยวกลับ แล้วดันออกทางช่องเป็นฟองในของเหลว',
+          'โมเลกุลหนักในฟองเย็นลงและควบแน่นเป็นของเหลว ส่วนโมเลกุลเบายังเป็นแก๊สและลอยขึ้นไปยังถาดชั้นถัดไป',
+          'ฟองไอร้อนยังทำให้โมเลกุลเบาบางส่วนในของเหลวเดือดออกมา แล้วลอยขึ้นไปพร้อมกับไอ',
+          'ของเหลวล้นข้ามฝาย แล้วไหลลงตามท่อน้ำล้นไปยังถาดชั้นล่าง',
+          'ตรงนี้ ของเหลวจากท่อน้ำล้นของถาดชั้นบนไหลมารวมในซัมป์ ท่อด้านข้างดึงของเหลวส่วนหนึ่งออกไปเป็นน้ำมันก๊าด ส่วนที่เหลือล้นออกไปบนถาดชั้นล่าง'],
+        p: 'หอกลั่นจริงมีถาด 30 ถึง 50 ชั้น มีเพียง 3 ถึง 6 ชั้นที่เป็นถาดดึงส่วนกลั่นแบบนี้ ถาดอื่นทำเฉพาะขั้นที่ 1 ถึง 5 และแต่ละชั้นช่วยให้การแยกละเอียดขึ้นอีกนิด' },
+      lightDot: 'โมเลกุลเบา (แก๊ส)', heavyDot: 'โมเลกุลหนัก (แก๊ส)', liquidDot: 'ของเหลว',
+      parts: {
+        tower: [
+          ['เตาเผา', 'น้ำมันดิบถูกสูบผ่านท่อยาวที่อยู่ในเตาเผา และให้ความร้อนถึงประมาณ 350–400°C ส่วนใหญ่กลายเป็นไอตั้งแต่ยังไม่ถึงหอ ปล่องสูงช่วยระบายควันออกไป'],
+          ['ทางเข้าของน้ำมันร้อน', 'ไอและของเหลวที่ร้อนจัดพุ่งเข้าหอทางด้านล่าง ไอพุ่งขึ้นข้างบน ส่วนของเหลวที่หนักที่สุดตกลงไปที่ก้นหอ'],
+          ['ถาด', 'หอกลั่นจริงมีถาดโลหะ 30 ถึง 50 ชั้นซ้อนกันอยู่ข้างใน เหมือนชั้นของตึก โมเดลนี้แสดง 14 ชั้นเพื่อให้มองเห็นง่าย ถาดแต่ละชั้นเย็นกว่าชั้นที่อยู่ด้านล่างเล็กน้อย ถาดส่วนใหญ่เป็นถาดธรรมดาที่ส่งไอขึ้นและส่งของเหลวลง มีเพียงไม่กี่ชั้นที่เป็นถาดดึงส่วนกลั่นซึ่งมีท่อด้านข้าง'],
+          ['ถ้วยครอบ (บับเบิลแคป)', 'บนถาดแต่ละชั้นมีถ้วยคว่ำเล็ก ๆ เรียกว่า ถ้วยครอบ หรือบับเบิลแคป ไอจากด้านล่างต้องผุดเป็นฟองผ่านของเหลวที่อยู่บนถาด ตรงนี้แหละที่การแยกเกิดขึ้น กดปุ่ม ส่องถาดหนึ่งชั้น เพื่อดูใกล้ ๆ'],
+          ['ท่อน้ำล้น (ดาวน์คัมเมอร์)', 'ของเหลวที่สะสมบนถาดจะล้นข้ามผนังเตี้ย ๆ แล้วไหลลงช่องที่เรียกว่า ท่อน้ำล้น ไปยังถาดชั้นล่าง ของเหลวไหลลง ส่วนไอลอยขึ้น และทั้งสองมาเจอกันบนทุกถาด'],
+          ['ท่อดึงส่วนกลั่นด้านข้าง', 'มีเพียงไม่กี่ถาด โดยทั่วไป 3 ถึง 6 ถาดจาก 30 ถึง 50 ถาด ที่มีท่อดึงของเหลวออก เรียกว่า ถาดดึงส่วนกลั่น ของเหลวจะไหลมารวมในบ่อเล็ก ๆ ที่เรียกว่า ซัมป์ แล้วท่อจะดึงของเหลวส่วนหนึ่งออกไปเป็นผลิตภัณฑ์ เช่น น้ำมันก๊าดหรือน้ำมันดีเซล ส่วนที่เหลือไหลลงหอต่อไป ยิ่งท่ออยู่สูง ส่วนกลั่นก็ยิ่งเบา ดูการทำงานจริงได้ในโหมด ส่องถาดหนึ่งชั้น'],
+          ['เครื่องควบแน่น', 'ไอที่เบาที่สุดออกทางยอดหอ แล้วผ่านเครื่องควบแน่น ซึ่งมีน้ำเย็นไหลอยู่ในท่อคอยดึงความร้อนออก ไอส่วนใหญ่จึงกลายเป็นของเหลว'],
+          ['ถังรีฟลักซ์และปั๊ม', 'ของเหลวไหลมารวมในถัง แก๊สที่ไม่ควบแน่นออกทางด้านบนของถัง ปั๊มส่งของเหลวส่วนหนึ่งออกไปเป็นน้ำมันเบนซิน และสูบส่วนที่เหลือกลับเข้าไปที่ยอดหอ เรียกว่า รีฟลักซ์ ช่วยให้ยอดหอเย็น และแยกได้ดีขึ้น'],
+          ['ทางเข้าไอน้ำ', 'มีการเป่าไอน้ำร้อนเข้าไปที่ก้นหอ เพื่อช่วยดึงโมเลกุลเล็ก ๆ ที่ยังหลงเหลือ ออกจากของเหลวหนักที่ก้นหอ'],
+          ['ทางออกก้นหอ', 'ของเหลวที่หนักที่สุดซึ่งไม่เดือด ไหลออกทางก้นหอ นำไปทำยางมะตอยสำหรับทำถนน หรือส่งไปแยกต่อในหออีกหอหนึ่ง'],
+          ['ผนังเหล็กและฉนวน', 'หอกลั่นทำจากเหล็กหนา หอจริงสูงประมาณ 50 เมตร หรือเท่ากับตึก 15 ชั้น มีฉนวนหนา (สีเหลือง) หุ้มอยู่ใต้แผ่นโลหะมันวาว เพื่อเก็บความร้อนไว้ข้างใน'],
+          ['ชานพัก บันได และแมนโฮล', 'พนักงานปีนบันไดขึ้นไปบนชานพักเพื่อตรวจมาตรวัดและวาล์ว ประตูกลมที่เรียกว่า แมนโฮล ให้คนปีนเข้าไปข้างในได้ เมื่อหยุดเดินเครื่องเพื่อทำความสะอาด ลองหาคนงานตัวจิ๋วที่ใส่หมวกนิรภัยสีเหลือง จะเห็นว่าหอกลั่นใหญ่แค่ไหน']
+        ],
+        tray: [
+          ['ไอจากถาดชั้นล่าง', 'ไอร้อนจากถาดชั้นล่างดันตัวขึ้นมา ไอนี้มีทั้งโมเลกุลเบา (สีฟ้า) และโมเลกุลหนัก (สีส้ม) ปนกัน'],
+          ['ท่อไรเซอร์ (ปล่อง)', 'ไอลอยขึ้นผ่านท่อสั้น ๆ ที่เรียกว่า ท่อไรเซอร์ ท่อนี้สูงกว่าระดับของเหลว ของเหลวจึงไหลลงไปทางนี้ไม่ได้'],
+          ['ถ้วยครอบ', 'ถ้วยครอบทำงานเหมือนแก้วคว่ำ ทำให้ไอเลี้ยวกลับ และถูกดันลงไปในของเหลว'],
+          ['ช่องเปิด (สลอต)', 'ไอหนีออกทางช่องเล็ก ๆ รอบขอบล่างของถ้วยครอบ แล้วแตกเป็นฟองเล็ก ๆ จำนวนมาก'],
+          ['ของเหลวบนถาด', 'ฟองไอสัมผัสกับของเหลวที่เย็นกว่า โมเลกุลหนัก (สีส้ม) เย็นลงและควบแน่นเป็นของเหลว ในขณะเดียวกัน ฟองไอร้อนก็ทำให้โมเลกุลเบา (สีฟ้า) บางส่วนในของเหลวเดือดออกมา โมเลกุลเบาจึงลอยขึ้นไปยังถาดชั้นถัดไป ถาดแต่ละชั้นจึงช่วยแยกได้ละเอียดขึ้นอีกนิด'],
+          ['ฝาย (เวียร์)', 'ผนังเตี้ย ๆ ที่ขอบถาด เรียกว่า ฝาย ช่วยกักของเหลวให้เป็นชั้นอยู่บนถาด ของเหลวที่เกินจะล้นข้ามไป'],
+          ['ท่อน้ำล้น (ดาวน์คัมเมอร์)', 'ของเหลวที่ล้นออกมาจะตกลงตามช่องนี้ ไปยังถาดชั้นล่าง'],
+          ['ท่อน้ำล้นจากถาดชั้นบน', 'ของเหลวจากถาดชั้นบนไหลลงตามช่องนี้ ปลายด้านล่างจุ่มอยู่ในของเหลวในซัมป์ ของเหลวจึงปิดปลายท่อไว้ ไอลอยย้อนขึ้นไปทางนี้ไม่ได้'],
+          ['บ่อพักของเหลว (ซัมป์)', 'บนถาดดึงส่วนกลั่น ของเหลวจะไหลมารวมในบ่อเล็ก ๆ ที่เรียกว่า ซัมป์ ก่อนจะไหลต่อไป ท่อด้านข้างดึงของเหลวจากตรงนี้'],
+          ['ท่อดึงส่วนกลั่นด้านข้าง', 'ท่อที่เจาะทะลุผนังหอดึงของเหลวส่วนหนึ่งออกจากซัมป์ ของเหลวนี้คือผลิตภัณฑ์ ในที่นี้คือน้ำมันก๊าด ซึ่งส่งไปเก็บในถัง ส่วนที่เหลือล้นข้ามขอบซัมป์ไปบนถาดชั้นล่าง แล้วไหลลงหอต่อไป ในถาด 30 ถึง 50 ชั้น มีเพียง 3 ถึง 6 ชั้นเท่านั้นที่มีท่อแบบนี้']
+        ]
+      },
+      tags: { crude: 'น้ำมันดิบเข้า', steam: 'ไอน้ำ', gas: 'แก๊ส', petrol: 'น้ำมันเบนซิน', naphtha: 'แนฟทา · 120°C', kerosene: 'น้ำมันก๊าด · 180°C', diesel: 'น้ำมันดีเซล · 260°C', fueloil: 'น้ำมันเตา · 340°C', bitumen: 'ยางมะตอย', upper: 'ถาดชั้นบน · เย็นกว่าเล็กน้อย', lower: 'ถาดชั้นล่าง · ร้อนกว่าเล็กน้อย', draw: 'ไปถังน้ำมันก๊าด' }
+    }
+  };
+  const t = () => TXT[lang()];
+
+  let view = 'tower', selected = null, cut = true, flowOn = !reduce, G = null;
+
+  function renderPanel() {
+    const x = t(), parts = x.parts[view];
+    partList.innerHTML = parts.map((p, i) => `<li><button type="button" class="pl-btn" data-i="${i}" aria-pressed="${selected === i}"><span class="pl-n">${i + 1}</span><span>${p[0]}</span></button></li>`).join('');
+    if (selected === null) {
+      partInfo.innerHTML = view === 'tower'
+        ? `<p class="kicker">${x.kTower}</p><h3>${x.introTower.h}</h3><p>${x.introTower.p}</p>`
+        : `<p class="kicker">${x.kTray}</p><h3>${x.introTray.h}</h3><ol>${x.introTray.steps.map(s => `<li>${s}</li>`).join('')}</ol><p>${x.introTray.p}</p><p class="dots3d"><span><span class="sw sw-light"></span>${x.lightDot}</span><span><span class="sw sw-heavy"></span>${x.heavyDot}</span><span><span class="sw sw-liquid"></span>${x.liquidDot}</span></p>`;
+    } else {
+      const p = parts[selected];
+      partInfo.innerHTML = `<p class="kicker">${x.partOf(selected + 1, parts.length)}</p><h3>${p[0]}</h3><p>${p[1]}</p><button type="button" class="link-btn" data-clear="1">${x.back}</button>`;
+    }
+  }
+  function select(i) {
+    selected = (i === null || selected === i) ? null : i;
+    renderPanel();
+    if (G) G.onSelect();
+  }
+  function setView(v) {
+    view = v; selected = null;
+    viewBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
+    cutBtn.hidden = v !== 'tower';
+    renderPanel();
+    if (G) G.setView();
+  }
+  const setFlowLabel = () => { flowBtn.textContent = flowOn ? t().pause : t().play; };
+  partList.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) select(Number(b.dataset.i)); });
+  partInfo.addEventListener('click', e => { if (e.target.closest('[data-clear]')) select(null); });
+  viewBtns.forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  cutBtn.addEventListener('click', () => { cut = !cut; cutBtn.setAttribute('aria-pressed', String(cut)); if (G) G.setCut(); });
+  flowBtn.addEventListener('click', () => { flowOn = !flowOn; setFlowLabel(); });
+  resetBtn.addEventListener('click', () => { if (G) G.reset(); });
+  zinBtn.addEventListener('click', () => { if (G) G.zoom(0.84); });
+  zoutBtn.addEventListener('click', () => { if (G) G.zoom(1.19); });
+
+  // ======================= 3D engine =======================
+  function createEngine() {
+    const T3 = window.THREE;
+    const renderer = new T3.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const scene = new T3.Scene();
+    const camera = new T3.PerspectiveCamera(32, 1, 0.1, 300);
+    scene.add(camera);
+    scene.add(new T3.HemisphereLight(0xffffff, 0x404a52, 0.75));
+    const sun = new T3.DirectionalLight(0xffffff, 0.6); sun.position.set(6, 16, 9); scene.add(sun);
+    const headLight = new T3.DirectionalLight(0xffffff, 0.45); headLight.position.set(0, 0, 1);
+    camera.add(headLight); headLight.target.position.set(0, 0, -1); camera.add(headLight.target);
+
+    const UP = new T3.Vector3(0, 1, 0), V = (x, y, z) => new T3.Vector3(x, y, z), col = h => new T3.Color(h), WHITE = col(0xffffff);
+    const dm = new T3.Object3D();
+    const partMats = { tower: {}, tray: {} };
+    function mat(vk, part, o) {
+      const m = new T3.MeshStandardMaterial(Object.assign({ metalness: 0.3, roughness: 0.55 }, o));
+      m.userData.e0 = m.emissive.getHex(); m.userData.ei = m.emissiveIntensity;
+      if (part != null) (partMats[vk][part] = partMats[vk][part] || []).push(m);
+      return m;
+    }
+    function add(par, geo, m, x = 0, y = 0, z = 0) { const me = new T3.Mesh(geo, m); me.position.set(x, y, z); par.add(me); return me; }
+    function rod(par, a, b, r, m, seg = 12) {
+      const d = new T3.Vector3().subVectors(b, a), len = d.length();
+      const me = new T3.Mesh(new T3.CylinderGeometry(r, r, len, seg, 1, false), m);
+      me.position.copy(a).addScaledVector(d, 0.5);
+      me.quaternion.setFromUnitVectors(UP, d.clone().normalize());
+      par.add(me); return me;
+    }
+    function pipe(par, pts, r, m, flange) {
+      const v = pts.map(p => V(p[0], p[1], p[2]));
+      for (let i = 0; i < v.length - 1; i++) rod(par, v[i], v[i + 1], r, m);
+      for (let i = 1; i < v.length - 1; i++) add(par, new T3.SphereGeometry(r, 12, 8), m, v[i].x, v[i].y, v[i].z);
+      if (flange) { const a = v[v.length - 2], b = v[v.length - 1], d = new T3.Vector3().subVectors(b, a).normalize(); rod(par, b.clone().addScaledVector(d, -0.05), b, r * 1.7, flange); }
+    }
+    function valve(par, x, y, z, m) {
+      add(par, new T3.SphereGeometry(0.11, 14, 10), m, x, y, z);
+      rod(par, V(x, y, z), V(x, y + 0.24, z), 0.018, m, 6);
+      const w = new T3.TorusGeometry(0.1, 0.018, 6, 20); w.rotateX(Math.PI / 2); add(par, w, m, x, y + 0.24, z);
+    }
+    // half shapes: "back" = z <= 0 (kept when cut open), "front" = z >= 0
+    const halfCyl = (par, r, h, y, m, front, seg = 40) => add(par, new T3.CylinderGeometry(r, r, h, seg, 1, true, front ? -Math.PI / 2 : Math.PI / 2, Math.PI), m, 0, y, 0);
+    const halfSphere = (par, r, y, top, m, front) => add(par, new T3.SphereGeometry(r, 40, 12, front ? 0 : Math.PI, Math.PI, top ? 0 : Math.PI / 2, Math.PI / 2), m, 0, y, 0);
+    function halfTorus(par, r, tube, y, m, front) { const g = new T3.TorusGeometry(r, tube, 6, 48, Math.PI); g.rotateX(front ? Math.PI / 2 : -Math.PI / 2); return add(par, g, m, 0, y, 0); }
+    function halfRing(par, r1, r2, y, m, front) { const g = new T3.RingGeometry(r1, r2, 48, 1, 0, Math.PI); g.rotateX(front ? Math.PI / 2 : -Math.PI / 2); return add(par, g, m, 0, y, 0); }
+    // tray outline: back half-disc with the downcomer segment (side s) cut off
+    function trayShape(R, D, s) {
+      const a0 = Math.acos(D / R), sh = new T3.Shape();
+      if (s > 0) { sh.moveTo(D, 0); sh.lineTo(D, R * Math.sin(a0)); sh.absarc(0, 0, R, a0, Math.PI, false); sh.lineTo(D, 0); }
+      else { sh.moveTo(R, 0); sh.absarc(0, 0, R, 0, Math.PI - a0, false); sh.lineTo(-D, 0); sh.lineTo(R, 0); }
+      return sh;
+    }
+    // back half-disc trimmed by a chord on the left (x < -L) and/or on the right (x > Rt)
+    function trayShapeLR(R, L, Rt) {
+      const a1 = Rt ? Math.acos(Rt / R) : 0, a2 = L ? Math.PI - Math.acos(L / R) : Math.PI, x0 = Rt || R, sh = new T3.Shape();
+      sh.moveTo(x0, 0);
+      if (Rt) sh.lineTo(Rt, R * Math.sin(a1));
+      sh.absarc(0, 0, R, a1, a2, false);
+      if (L) sh.lineTo(-L, 0);
+      sh.lineTo(x0, 0);
+      return sh;
+    }
+    // the small piece of the back half-disc left of x = -L (the draw-off sump)
+    function segLeft(R, L) {
+      const a = Math.PI - Math.acos(L / R), sh = new T3.Shape();
+      sh.moveTo(-L, 0); sh.lineTo(-L, R * Math.sin(a)); sh.absarc(0, 0, R, a, Math.PI, false); sh.lineTo(-L, 0);
+      return sh;
+    }
+    function slab(shape, depth) { const g = new T3.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 28 }); g.rotateX(-Math.PI / 2); return g; }
+
+    // ---------- particles moving along paths ----------
+    function mkPath(pts) {
+      const v = pts.map(p => p.isVector3 ? p : V(p[0], p[1], p[2])), cum = [0];
+      for (let i = 1; i < v.length; i++) cum.push(cum[i - 1] + v[i].distanceTo(v[i - 1]));
+      return { v, cum, total: cum[cum.length - 1] };
+    }
+    function pathAt(P, d, out) {
+      if (d <= 0) return out.copy(P.v[0]);
+      if (d >= P.total) return out.copy(P.v[P.v.length - 1]);
+      let i = 1; while (P.cum[i] < d) i++;
+      const seg = P.cum[i] - P.cum[i - 1] || 1;
+      return out.lerpVectors(P.v[i - 1], P.v[i], (d - P.cum[i - 1]) / seg);
+    }
+    function makeFlow(par, max, radius) {
+      const mesh = new T3.InstancedMesh(new T3.SphereGeometry(radius, 10, 8), new T3.MeshBasicMaterial({ color: 0xffffff }), max);
+      mesh.instanceMatrix.setUsage(T3.DynamicDrawUsage);
+      for (let i = 0; i < max; i++) mesh.setColorAt(i, WHITE);
+      mesh.count = 0; mesh.frustumCulled = false; par.add(mesh);
+      const items = [], tmp = new T3.Vector3();
+      return {
+        add(P, speed, c1, c2, sw, s, wob, wobEnd, onEnd) {
+          if (items.length >= max) return;
+          items.push({ P, d: 0, speed, c1, c2: c2 || c1, sw: sw == null ? Infinity : sw, s: s || 1, wob: wob || 0, wobEnd: wobEnd || 0, ph: Math.random() * 6.28, onEnd });
+        },
+        update(dt) {
+          for (let i = items.length - 1; i >= 0; i--) {
+            const it = items[i]; it.d += it.speed * dt;
+            if (it.d >= it.P.total) { items.splice(i, 1); if (it.onEnd) it.onEnd(); }
+          }
+          for (let i = 0; i < items.length; i++) {
+            const it = items[i]; pathAt(it.P, it.d, tmp);
+            if (it.wob && it.d < it.wobEnd) {
+              const k = Math.max(0, Math.min(1, it.d / 0.6, (it.wobEnd - it.d) / 0.6));
+              tmp.x += Math.sin(it.d * 5 + it.ph) * it.wob * k; tmp.z += Math.cos(it.d * 4 + it.ph) * it.wob * 0.6 * k;
+            }
+            dm.position.copy(tmp); dm.quaternion.identity(); dm.scale.setScalar(it.s); dm.updateMatrix();
+            mesh.setMatrixAt(i, dm.matrix);
+            mesh.setColorAt(i, it.d < it.sw ? it.c1 : it.c2);
+          }
+          mesh.count = items.length;
+          mesh.instanceMatrix.needsUpdate = true;
+          if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+        }
+      };
+    }
+
+    const C = { steel: 0x8f9ba2, steelIn: 0x5d686e, clad: 0xcfd6da, wool: 0xa8946a, tray: 0x7b8890, cap: 0x4c5960, dc: 0x97a3aa, pipe: 0xaab5bb, flange: 0x6d7a82, yellow: 0xf2b705, grate: 0x66737b, skirt: 0x56626a };
+    const FCOL = { gas: 0x8ec5e6, petrol: 0xf2cf3d, naphtha: 0xeea83a, kerosene: 0xdf7b26, diesel: 0xb4541c, fueloil: 0x8a4520, bitumen: 0x4a3426 };
+    const PCOL = {}, VCOL = {};
+    Object.keys(FCOL).forEach(k => { PCOL[k] = col(FCOL[k]); VCOL[k] = col(FCOL[k]).lerp(WHITE, 0.45); });
+
+    // ======================= WHOLE TOWER =======================
+    const tower = new T3.Group(), frontG = new T3.Group(), cutOnly = new T3.Group();
+    scene.add(tower); tower.add(frontG); tower.add(cutOnly);
+    const R = 1.2, RI = 1.32, H = 10.6, D = 0.864, NT = 14, SP = 0.62, Y0 = 1.9, Z = -0.35;
+    const ty = i => Y0 + i * SP, side = i => (i % 2 ? 1 : -1);
+    const zoneOf = i => i <= 2 ? 'fueloil' : i <= 5 ? 'diesel' : i <= 8 ? 'kerosene' : i <= 11 ? 'naphtha' : 'petrol';
+    const occBack = [], occFront = [];
+    const P = 'tower';
+    const mFurn = mat(P, 0, { color: 0x3b4751, roughness: 0.7 }), mStack = mat(P, 0, { color: 0x7d878d });
+    const mFire = new T3.MeshStandardMaterial({ color: 0x220800, emissive: 0xff6a1a, emissiveIntensity: 1.3 });
+    const mFeed = mat(P, 1, { color: C.pipe, metalness: 0.5, roughness: 0.4 });
+    const mTray = mat(P, 2, { color: C.tray, side: T3.DoubleSide });
+    const mCap = mat(P, 3, { color: C.cap });
+    const mDc = mat(P, 4, { color: C.dc, side: T3.DoubleSide });
+    const mDraw = mat(P, 5, { color: C.pipe, metalness: 0.5, roughness: 0.4 }), mValve = mat(P, 5, { color: 0xc0392b, roughness: 0.5 });
+    const mCond = mat(P, 6, { color: 0xb9c3c8, metalness: 0.55, roughness: 0.35 });
+    const mWater = new T3.MeshStandardMaterial({ color: 0x2b86c9, roughness: 0.5 });
+    const mDrum = mat(P, 7, { color: 0xc4ccd0, metalness: 0.5, roughness: 0.35 }), mPump = mat(P, 7, { color: 0x2f6db3, roughness: 0.5 }), mReflux = mat(P, 7, { color: C.pipe, metalness: 0.5, roughness: 0.4 });
+    const mSteam = mat(P, 8, { color: 0xdde4e8, metalness: 0.4, roughness: 0.4 });
+    const mBottom = mat(P, 9, { color: C.pipe, metalness: 0.5, roughness: 0.4 });
+    const mShell = mat(P, 10, { color: C.steel, metalness: 0.45, roughness: 0.45 }), mShellIn = mat(P, 10, { color: C.steelIn, side: T3.BackSide, roughness: 0.85 });
+    const mClad = mat(P, 10, { color: C.clad, metalness: 0.55, roughness: 0.35 }), mWool = mat(P, 10, { color: C.wool, roughness: 0.95, metalness: 0, side: T3.DoubleSide });
+    const mSkirt = mat(P, 10, { color: C.skirt, side: T3.DoubleSide });
+    const mGrate = mat(P, 11, { color: C.grate, side: T3.DoubleSide, metalness: 0.5 }), mRail = mat(P, 11, { color: C.yellow, roughness: 0.5 }), mMan = mat(P, 11, { color: 0x7f8b92, metalness: 0.5, roughness: 0.4 });
+    const mWorker = [0x24406b, 0xf06a1d, 0xe0b48c, 0xf2c200].map(c => mat(P, 11, { color: c, roughness: 0.6 }));
+    const mFlange = new T3.MeshStandardMaterial({ color: C.flange, metalness: 0.5, roughness: 0.4 });
+    const mBit = new T3.MeshStandardMaterial({ color: 0x2b1c14, roughness: 0.2, metalness: 0.1, side: T3.DoubleSide });
+
+    // shell, heads, cladding, skirt (back half always; front half only when closed)
+    [false, true].forEach(front => {
+      const par = front ? frontG : tower, occ = front ? occFront : occBack;
+      occ.push(halfCyl(par, R, H, H / 2, mShell, front), halfCyl(par, R, H, H / 2, mShellIn, front), halfCyl(par, RI, H, H / 2, mClad, front));
+      occ.push(halfSphere(par, R, H, true, mShell, front), halfSphere(par, R, H, true, mShellIn, front), halfSphere(par, RI, H, true, mClad, front));
+      occ.push(halfSphere(par, R, 0, false, mShell, front), halfSphere(par, R, 0, false, mShellIn, front));
+      halfCyl(par, R, 1.7, -1.15, mSkirt, front);
+      for (let y = 0.7; y < H; y += 1.15) halfTorus(par, RI + 0.004, 0.012, y, mFlange, front);
+    });
+    // insulation seen edge-on at the cut
+    [-1, 1].forEach(sx => add(cutOnly, new T3.BoxGeometry(RI - R, H, 0.012), mWool, sx * (R + RI) / 2, H / 2, 0));
+    add(cutOnly, new T3.RingGeometry(R, RI, 32, 1, 0, Math.PI), mWool, 0, H, 0);
+    add(tower, new T3.CylinderGeometry(1.75, 1.85, 0.2, 40), new T3.MeshStandardMaterial({ color: 0xb5afa3, roughness: 0.9 }), 0, -2.1, 0);
+
+    // trays, liquid on each tray, downcomers, bubble caps
+    const capPos = [], liqMats = {};
+    for (let i = 0; i < NT; i++) {
+      const s = side(i), y = ty(i), z = zoneOf(i);
+      occBack.push(add(tower, slab(trayShape(R - 0.01, D, s), 0.035), mTray, 0, y, 0));
+      liqMats[z] = liqMats[z] || new T3.MeshStandardMaterial({ color: FCOL[z], transparent: true, opacity: 0.6, roughness: 0.2, depthWrite: false });
+      add(tower, slab(trayShape(R - 0.03, D, s), 0.07), liqMats[z], 0, y + 0.036, 0);
+      const w = Math.sqrt(R * R - D * D), yTop = y + 0.12, yBot = i === 0 ? 0.75 : ty(i - 1) + 0.15;
+      const pg = new T3.PlaneGeometry(w, yTop - yBot); pg.rotateY(Math.PI / 2);
+      add(tower, pg, mDc, s * D, (yTop + yBot) / 2, -w / 2);
+      for (const cx of [-0.7, -0.42, -0.14, 0.14, 0.42, 0.7]) for (const cz of [-0.14, -0.42, -0.7, -0.98]) if (cx * cx + cz * cz < 1.08) capPos.push([cx, y + 0.1, cz]);
+    }
+    const caps = new T3.InstancedMesh(new T3.CylinderGeometry(0.075, 0.075, 0.07, 12), mCap, capPos.length);
+    capPos.forEach((p, k) => { dm.position.set(p[0], p[1], p[2]); dm.quaternion.identity(); dm.scale.set(1, 1, 1); dm.updateMatrix(); caps.setMatrixAt(k, dm.matrix); });
+    tower.add(caps);
+
+    // heavy liquid pool at the bottom
+    const rb = R - 0.02, lv = 0.5;
+    halfCyl(tower, rb, lv, lv / 2, mBit, false); halfSphere(tower, rb, 0, false, mBit, false);
+    const poolTop = new T3.CircleGeometry(rb, 40, 0, Math.PI); poolTop.rotateX(-Math.PI / 2); add(tower, poolTop, mBit, 0, lv, 0);
+    const poolCut = new T3.Shape(); poolCut.moveTo(-rb, lv); poolCut.lineTo(rb, lv); poolCut.lineTo(rb, 0); poolCut.absarc(0, 0, rb, 0, -Math.PI, true); poolCut.lineTo(-rb, lv);
+    add(tower, new T3.ShapeGeometry(poolCut, 24), mBit, 0, 0, 0.003);
+
+    // furnace + feed
+    const furnaceBox = add(tower, new T3.BoxGeometry(1.5, 2.6, 1.4), mFurn, -3.35, -0.7, Z);
+    add(tower, new T3.PlaneGeometry(0.95, 0.55), mFire, -3.35, -1.25, Z + 0.705);
+    add(tower, new T3.CylinderGeometry(0.15, 0.2, 3.9, 16), mStack, -3.8, 2.55, Z - 0.3);
+    add(tower, new T3.BoxGeometry(1.6, 0.12, 1.5), mFlange, -3.35, 0.62, Z);
+    pipe(tower, [[-4.1, -1.3, Z], [-5.3, -1.3, Z]], 0.08, mFeed, mFlange);
+    pipe(tower, [[-3.0, 0.6, Z], [-3.0, 1.4, Z], [-1.0, 1.4, Z]], 0.1, mFeed);
+    // steam in, bottoms out
+    pipe(tower, [[-1.0, 0.2, Z], [-2.2, 0.2, Z]], 0.06, mSteam, mFlange);
+    pipe(tower, [[0.35, -0.95, -0.3], [0.35, -1.45, -0.3], [3.4, -1.45, -0.3]], 0.08, mBottom, mFlange);
+    valve(tower, 2.5, -1.45, -0.3, mValve);
+    // side draw-offs with a colour band for each product
+    const DRAW = { fueloil: 2, diesel: 5, kerosene: 8, naphtha: 11 };
+    Object.entries(DRAW).forEach(([f, k]) => {
+      const y = ty(k);
+      pipe(tower, [[1.0, y + 0.12, Z], [2.1, y + 0.12, Z], [2.1, y - 0.25, Z], [3.35, y - 0.25, Z]], 0.07, mDraw, mFlange);
+      valve(tower, 2.7, y - 0.25, Z, mValve);
+      const band = new T3.TorusGeometry(0.085, 0.03, 8, 20); band.rotateY(Math.PI / 2);
+      add(tower, band, new T3.MeshStandardMaterial({ color: FCOL[f], roughness: 0.5 }), 3.1, y - 0.25, Z);
+    });
+    // overhead: condenser, reflux drum, pump
+    pipe(tower, [[0, 11.55, -0.25], [0, 12.65, -0.25], [1.9, 12.65, Z]], 0.12, mCond);
+    const cg = new T3.CylinderGeometry(0.32, 0.32, 2.0, 28); cg.rotateZ(Math.PI / 2);
+    const condenser = add(tower, cg, mCond, 2.9, 12.65, Z);
+    [1.9, 3.9].forEach(x => { const g = new T3.CylinderGeometry(0.38, 0.38, 0.08, 28); g.rotateZ(Math.PI / 2); add(tower, g, mFlange, x, 12.65, Z); });
+    pipe(tower, [[2.3, 12.9, Z], [2.3, 13.3, Z]], 0.06, mWater);
+    pipe(tower, [[3.55, 12.9, Z], [3.55, 13.3, Z]], 0.06, mWater);
+    pipe(tower, [[3.3, 12.4, Z], [3.3, 11.38, Z]], 0.08, mCond);
+    const dg = new T3.CylinderGeometry(0.4, 0.4, 1.6, 28); dg.rotateZ(Math.PI / 2);
+    const drum = add(tower, dg, mDrum, 3.4, 11.0, Z);
+    [2.6, 4.2].forEach(x => { add(tower, new T3.SphereGeometry(0.4, 24, 16), mDrum, x, 11.0, Z).scale.x = 0.45; });
+    [2.75, 4.0].forEach(x => add(tower, new T3.BoxGeometry(0.12, 0.3, 0.6), mFlange, x, 10.62, Z));
+    pipe(tower, [[4.0, 11.38, Z], [4.0, 11.95, Z], [4.9, 11.95, Z]], 0.06, mReflux, mFlange);
+    pipe(tower, [[3.0, 10.62, Z], [3.0, 10.05, Z]], 0.06, mReflux);
+    add(tower, new T3.SphereGeometry(0.14, 16, 12), mPump, 3.0, 10.05, Z);
+    const motor = new T3.CylinderGeometry(0.12, 0.12, 0.45, 16); motor.rotateZ(Math.PI / 2); add(tower, motor, mPump, 3.38, 10.05, Z);
+    pipe(tower, [[3.0, 10.05, Z], [3.0, 9.7, Z], [4.9, 9.7, Z]], 0.055, mReflux, mFlange);
+    pipe(tower, [[2.86, 10.05, Z], [2.05, 10.05, Z], [2.05, 10.38, Z], [1.0, 10.38, Z]], 0.055, mReflux);
+
+    // platforms with yellow railings
+    [3.85, 7.3, 10.7].forEach(y => [false, true].forEach(front => {
+      const par = front ? frontG : tower;
+      halfRing(par, RI + 0.02, 1.95, y, mGrate, front);
+      halfCyl(par, 1.95, 0.08, y + 0.04, mGrate, front);
+      halfTorus(par, 1.93, 0.018, y + 0.55, mRail, front);
+      halfTorus(par, 1.93, 0.014, y + 0.3, mRail, front);
+      for (let a = 0; a <= Math.PI + 0.001; a += Math.PI / 8) {
+        const th = (front ? -Math.PI / 2 : Math.PI / 2) + a, x = 1.93 * Math.sin(th), z = 1.93 * Math.cos(th);
+        rod(par, V(x, y, z), V(x, y + 0.55, z), 0.014, mRail, 6);
+      }
+    }));
+    // ladder with safety hoops
+    const dirL = V(-0.995, 0, -0.1).normalize(), perp = V(dirL.z, 0, -dirL.x), cL = dirL.clone().multiplyScalar(1.55);
+    [-1, 1].forEach(k => { const p = cL.clone().addScaledVector(perp, 0.15 * k); rod(tower, V(p.x, -0.3, p.z), V(p.x, 11.25, p.z), 0.02, mRail, 6); });
+    const rungs = new T3.InstancedMesh(new T3.CylinderGeometry(0.012, 0.012, 0.3, 6), mRail, 44);
+    for (let k = 0; k < 44; k++) { dm.position.set(cL.x, -0.1 + k * 0.26, cL.z); dm.quaternion.setFromUnitVectors(UP, perp); dm.updateMatrix(); rungs.setMatrixAt(k, dm.matrix); }
+    tower.add(rungs);
+    const hoopYaw = Math.atan2(-dirL.x, -dirL.z);
+    for (let y = 1.6; y < 11; y += 0.9) {
+      if ([3.85, 7.3, 10.7].some(p => Math.abs(p - y) < 0.35)) continue;
+      const g = new T3.TorusGeometry(0.3, 0.012, 4, 20, Math.PI); g.rotateX(-Math.PI / 2); g.rotateY(hoopYaw);
+      add(tower, g, mRail, cL.x, y, cL.z);
+    }
+    // manholes
+    const dirM = V(0.99, 0, -0.12).normalize();
+    [2.3, 5.95, 9.6].forEach(y => {
+      rod(tower, dirM.clone().multiplyScalar(1.22).setY(y), dirM.clone().multiplyScalar(1.5).setY(y), 0.22, mMan, 24);
+      rod(tower, dirM.clone().multiplyScalar(1.5).setY(y), dirM.clone().multiplyScalar(1.58).setY(y), 0.29, mMan, 24);
+    });
+    // a worker for scale (about 1.7 m next to a 50 m tower)
+    const wp = V(-0.96, 0, -0.3).normalize().multiplyScalar(1.68), wy = 7.31;
+    add(tower, new T3.CylinderGeometry(0.045, 0.05, 0.18, 10), mWorker[0], wp.x, wy + 0.09, wp.z);
+    add(tower, new T3.CylinderGeometry(0.06, 0.05, 0.16, 10), mWorker[1], wp.x, wy + 0.26, wp.z);
+    add(tower, new T3.SphereGeometry(0.045, 12, 10), mWorker[2], wp.x, wy + 0.38, wp.z);
+    add(tower, new T3.SphereGeometry(0.054, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), mWorker[3], wp.x, wy + 0.395, wp.z);
+    occBack.push(furnaceBox, condenser, drum);
+
+    // flows in the whole tower
+    const flowT = makeFlow(tower, 460, 0.065);
+    const F0 = [-1.0, 1.4, Z];
+    const crudeP = mkPath([[-5.3, -1.3, Z], [-4.1, -1.3, Z], [-3.35, -1.3, Z], [-3.35, 0.45, Z], [-3.0, 0.6, Z], [-3.0, 1.4, Z], F0]);
+    const steamP = mkPath([[-2.2, 0.2, Z], [-1.0, 0.2, Z], [-0.45, 0.32, -0.45], [-0.3, 1.25, -0.5]]);
+    const cCrude = col(0x3a2a20), cHot = col(0xff8a3d), cSteam = col(0xf2f6f8);
+    const OVER = [[0, 11.55, -0.25], [0, 12.65, -0.25], [1.9, 12.65, Z], [3.3, 12.65, Z], [3.3, 11.38, Z], [3.3, 11.05, Z]];
+    const W8 = [['gas', 0.1], ['petrol', 0.2], ['naphtha', 0.14], ['kerosene', 0.14], ['diesel', 0.15], ['fueloil', 0.12], ['bitumen', 0.15]];
+    function interior() { const a = Math.PI / 2 + 0.25 + Math.random() * (Math.PI - 0.5), r = 0.2 + Math.random() * 0.75; return [r * Math.sin(a), r * Math.cos(a)]; }
+    function spawnFraction() {
+      let r = Math.random(), f = 'bitumen';
+      for (const [k, w] of W8) { r -= w; if (r <= 0) { f = k; break; } }
+      const [x0, z0] = interior(), base = [F0, [x0, 1.4, z0]];
+      if (f === 'bitumen') { flowT.add(mkPath([...base, [x0, lv, z0], [0.35, -0.95, -0.3], [0.35, -1.45, -0.3], [3.4, -1.45, -0.3]]), 0.9, PCOL.bitumen); return; }
+      if (DRAW[f] != null) {
+        const y = ty(DRAW[f]) + 0.12, p = mkPath([...base, [x0, y, z0], [1.0, y, Z], [2.1, y, Z], [2.1, y - 0.37, Z], [3.35, y - 0.37, Z]]);
+        flowT.add(p, 1.25, VCOL[f], PCOL[f], p.cum[2], 1, 0.06, p.cum[2]); return;
+      }
+      const pts = [...base, [x0, 10.4, z0], ...OVER];
+      if (f === 'gas') pts.push([4.0, 11.2, Z], [4.0, 11.95, Z], [4.9, 11.95, Z]);
+      else if (Math.random() < 0.5) pts.push([3.0, 10.62, Z], [3.0, 10.05, Z], [3.0, 9.7, Z], [4.9, 9.7, Z]);
+      else pts.push([3.0, 10.62, Z], [3.0, 10.05, Z], [2.05, 10.05, Z], [2.05, 10.38, Z], [1.0, 10.38, Z], [0.4, 10.38, -0.5], [0.4, 10.02, -0.5]);
+      const p = mkPath(pts);
+      flowT.add(p, 1.3, VCOL[f], f === 'gas' ? VCOL[f] : PCOL[f], f === 'gas' ? null : p.cum[6], 1, 0.06, p.cum[2]);
+    }
+    function spawnDrip() {
+      const i = Math.floor(Math.random() * NT), x = side(i) * (D + 0.17), z = -(0.08 + Math.random() * 0.45);
+      flowT.add(mkPath([[x, ty(i) + 0.1, z], [x, i === 0 ? 0.55 : ty(i - 1) + 0.12, z]]), 1.1, PCOL[zoneOf(i)], null, null, 0.75);
+    }
+    let tCrude = 0, tDrip = 0, tSteam = 0;
+    function stepTower(dt) {
+      tCrude -= dt; while (tCrude <= 0) { tCrude += 0.16; flowT.add(crudeP, 1.6, cCrude, cHot, crudeP.cum[4], 1, 0, 0, spawnFraction); }
+      tDrip -= dt; while (tDrip <= 0) { tDrip += 0.09; spawnDrip(); }
+      tSteam -= dt; while (tSteam <= 0) { tSteam += 0.45; flowT.add(steamP, 0.9, cSteam, null, null, 0.75); }
+      flowT.update(dt);
+    }
+
+    // ======================= ONE TRAY UP CLOSE =======================
+    const trayG = new T3.Group(); trayG.visible = false; scene.add(trayG);
+    const Q = 'tray', RC = 2.6, DC = 2.0, WC = Math.sqrt(RC * RC - DC * DC), yB = -0.9, yT = 2.9, hh = yT - yB;
+    const qShell = mat(Q, null, { color: C.steel, metalness: 0.45, roughness: 0.45 }), qShellIn = mat(Q, null, { color: C.steelIn, side: T3.BackSide, roughness: 0.85 });
+    const qTray = mat(Q, null, { color: C.tray, side: T3.DoubleSide });
+    const qRiser = mat(Q, 1, { color: 0x8a979e, side: T3.DoubleSide, metalness: 0.45 });
+    const qCap = mat(Q, 2, { color: 0x56636b, side: T3.DoubleSide, metalness: 0.4 });
+    const qSlot = mat(Q, 3, { color: 0x151c20, roughness: 0.9 });
+    const qLiq = mat(Q, 4, { color: 0xe8a33d, transparent: true, opacity: 0.42, roughness: 0.15, depthWrite: false, side: T3.DoubleSide });
+    const qWeir = mat(Q, 5, { color: 0xa9b4ba, side: T3.DoubleSide, metalness: 0.45 });
+    const qDc = mat(Q, 6, { color: 0x97a3aa, side: T3.DoubleSide, metalness: 0.4 });
+    const qDcUp = mat(Q, 7, { color: 0x97a3aa, side: T3.DoubleSide, metalness: 0.4 });
+    const qSump = mat(Q, 8, { color: 0x8a979e, side: T3.DoubleSide, metalness: 0.45 });
+    const qSumpLiq = mat(Q, 8, { color: 0xe8a33d, transparent: true, opacity: 0.5, roughness: 0.15, depthWrite: false, side: T3.DoubleSide });
+    const qDraw = mat(Q, 9, { color: C.pipe, metalness: 0.5, roughness: 0.4 }), qValve = mat(Q, 9, { color: 0xc0392b, roughness: 0.5 });
+    const occC = [];
+    const shB = yB - 1.0, shT = yT + 0.6;   // shell runs past the frame so no background shows through
+    occC.push(halfCyl(trayG, RC, shT - shB, (shB + shT) / 2, qShell, false, 56), halfCyl(trayG, RC, shT - shB, (shB + shT) / 2, qShellIn, false, 56));
+    // lower tray: downcomer hole on the right, draw-off sump on the left. Upper tray: downcomer hole on the left.
+    const SL = 1.75, SB = -0.5, WS = Math.sqrt(RC * RC - SL * SL);
+    occC.push(add(trayG, slab(trayShapeLR(RC - 0.01, SL, DC), 0.05), qTray, 0, 0, 0));
+    add(trayG, slab(trayShapeLR(RC - 0.03, SL + 0.01, DC - 0.01), 0.25), qLiq, 0, 0.05, 0);
+    occC.push(add(trayG, slab(trayShapeLR(RC - 0.01, DC, null), 0.05), qTray, 0, 1.6, 0));
+    add(trayG, slab(trayShapeLR(RC - 0.03, DC - 0.01, null), 0.25), qLiq, 0, 1.65, 0);
+    // sump: a recessed well with its own floor; its inner wall is the lip the liquid spills over
+    occC.push(add(trayG, slab(segLeft(RC - 0.01, SL), 0.05), qSump, 0, SB, 0));
+    add(trayG, slab(segLeft(RC - 0.03, SL + 0.01), 0.78), qSumpLiq, 0, SB + 0.05, 0);
+    function vplate(x, top, bot, m, w = WC) { const g = new T3.PlaneGeometry(w, top - bot); g.rotateY(Math.PI / 2); return add(trayG, g, m, x, (top + bot) / 2, -w / 2); }
+    vplate(-SL, 0.34, SB, qSump, WS);    // sump lip
+    vplate(DC, 0.32, 0.05, qWeir);       // weir on the lower tray
+    vplate(DC, 0.05, yB - 1.0, qDc);      // downcomer to the tray below
+    vplate(-DC, 1.92, 1.65, qWeir);      // weir on the upper tray
+    vplate(-DC, 1.65, -0.22, qDcUp);      // downcomer from the upper tray, dipping into the sump liquid (a liquid seal)
+    vplate(DC, yT + 0.6, 1.88, qDc);      // downcomer from the tray above onto the upper tray
+    // side draw-off nozzle through the wall, with a valve and a kerosene-coloured band
+    const DZ = -0.6, DXo = -3.15;
+    pipe(trayG, [[-2.4, -0.3, DZ], [DXo, -0.3, DZ], [DXo, -1.15, DZ]], 0.09, qDraw, new T3.MeshStandardMaterial({ color: C.flange, metalness: 0.5, roughness: 0.4 }));
+    valve(trayG, -2.85, -0.3, DZ, qValve);
+    const drawBand = new T3.TorusGeometry(0.11, 0.035, 8, 20); drawBand.rotateX(Math.PI / 2);
+    add(trayG, drawBand, new T3.MeshStandardMaterial({ color: FCOL.kerosene, roughness: 0.5 }), DXo, -0.85, DZ);
+    const CX = [-1.4, -0.7, 0, 0.7, 1.4], CZ = [0, -0.8, -1.6];
+    const halfRiserG = new T3.CylinderGeometry(0.12, 0.12, 0.35, 20, 1, true, Math.PI / 2, Math.PI);
+    const halfCapG = new T3.CylinderGeometry(0.26, 0.26, 0.36, 28, 1, true, Math.PI / 2, Math.PI);
+    const halfTopG = new T3.CircleGeometry(0.26, 28, 0, Math.PI); halfTopG.rotateX(-Math.PI / 2);
+    const fullCapG = new T3.CylinderGeometry(0.26, 0.26, 0.36, 28, 1, true);
+    const fullTopG = new T3.CircleGeometry(0.26, 28); fullTopG.rotateX(-Math.PI / 2);
+    const slotPos = [];
+    [0, 1.6].forEach(y0 => CX.forEach(cx => CZ.forEach(cz => {
+      if (cx * cx + cz * cz > (RC - 0.35) * (RC - 0.35)) return;
+      const half = cz === 0;
+      if (half) { add(trayG, halfRiserG, qRiser, cx, y0 + 0.225, cz); add(trayG, halfCapG, qCap, cx, y0 + 0.28, cz); add(trayG, halfTopG, qCap, cx, y0 + 0.46, cz); }
+      else { occC.push(add(trayG, fullCapG, qCap, cx, y0 + 0.28, cz)); add(trayG, fullTopG, qCap, cx, y0 + 0.46, cz); }
+      for (let k = 0; k < 10; k++) {
+        const th = k / 10 * Math.PI * 2 + 0.31;
+        if (half && Math.cos(th) > -0.08) continue;
+        slotPos.push([cx + 0.265 * Math.sin(th), y0 + 0.155, cz + 0.265 * Math.cos(th), th]);
+      }
+    })));
+    const slots = new T3.InstancedMesh(new T3.BoxGeometry(0.055, 0.1, 0.02), qSlot, slotPos.length);
+    slotPos.forEach((p, k) => { dm.position.set(p[0], p[1], p[2]); dm.rotation.set(0, p[3], 0); dm.scale.set(1, 1, 1); dm.updateMatrix(); slots.setMatrixAt(k, dm.matrix); });
+    trayG.add(slots);
+
+    const flowC = makeFlow(trayG, 380, 0.045);
+    const cLight = col(0xbfe3f7), cHeavy = col(0xff7b54), cLiq = col(0xe39b2d);
+    const capSeg = (xc, zc, y0, d) => [[xc, y0 - 0.02, zc], [xc, y0 + 0.41, zc], [xc + d * 0.19, y0 + 0.42, zc], [xc + d * 0.19, y0 + 0.15, zc], [xc + d * 0.37, y0 + 0.15, zc], [xc + d * 0.46, y0 + 0.31, zc]];
+    const nearCap = x => CX.reduce((b, c) => Math.abs(c - x) < Math.abs(b - x) ? c : b, CX[0]);
+    const pick = () => (Math.random() < 0.5 ? -1 : 1);
+    // lower tray liquid: across to the right weir, then down the downcomer to the tray below
+    const LOWER_RUN = z => [[1.92, 0.2, z], [2.08, 0.36, z], [2.3, 0.28, z], [2.3, yB, z]];
+    // upper tray liquid: across to the left weir, down the downcomer into the sump
+    const UPPER_TO_SUMP = (x, z) => [[x, 1.8, z], [-1.92, 1.8, z], [-2.08, 1.96, z], [-2.3, 1.86, z], [-2.3, -0.3, z]];
+    // from the sump: part leaves through the side pipe, the rest spills over the lip onto the lower tray
+    const FROM_SUMP = z => Math.random() < 0.45
+      ? [[-2.4, -0.3, DZ], [DXo, -0.3, DZ], [DXo, -1.15, DZ]]
+      : [[-1.88, -0.3, z], [-1.88, 0.3, z], [-1.72, 0.38, z], [-1.6, 0.22, z], ...LOWER_RUN(z)];
+    function spawnVapor() {
+      const heavy = Math.random() < 0.45, c = heavy ? cHeavy : cLight;
+      const zc = Math.random() < 0.65 ? -0.05 : -0.8, x1 = CX[Math.floor(Math.random() * 5)], d1 = pick();
+      const pts = [[x1, yB, zc], ...capSeg(x1, zc, 0, d1)];
+      let sw = null;
+      if (Math.random() < (heavy ? 0.6 : 0.03)) {            // condenses on the lower tray
+        sw = mkPath(pts).cum[5];
+        pts.push([x1 + d1 * 0.5, 0.2, zc], ...LOWER_RUN(zc));
+      } else {
+        const x2 = nearCap(x1 + (Math.random() - 0.5) * 1.4), d2 = pick();
+        pts.push([x2, 1.58, zc], ...capSeg(x2, zc, 1.6, d2));
+        if (Math.random() < (heavy ? 0.7 : 0.08)) {          // condenses on the upper tray
+          sw = mkPath(pts).cum[pts.length - 2];
+          pts.push(...UPPER_TO_SUMP(x2 + d2 * 0.5, zc), ...FROM_SUMP(zc));
+        } else pts.push([x2 + d2 * 0.55, yT, zc]);            // still a gas: on to the next tray
+      }
+      flowC.add(mkPath(pts), 0.75, c, sw == null ? c : cLiq, sw, 1);
+    }
+    function spawnLiquid() {
+      const z = -(0.05 + Math.random() * 0.95);
+      flowC.add(mkPath([[2.3, yT, z], [2.3, 1.78, z], ...UPPER_TO_SUMP(1.9, z), ...FROM_SUMP(z)]), 0.55, cLiq, null, null, 1.1);
+    }
+    function spawnBoil() {   // hot bubbles boil a light molecule out of the liquid
+      const upper = Math.random() < 0.5, y0 = upper ? 1.6 : 0, x = -1.2 + Math.random() * 2.6, z = Math.random() < 0.6 ? -0.05 : -0.8;
+      const pts = [[x, y0 + 0.12, z], [x + 0.04, y0 + 0.33, z]];
+      if (upper) pts.push([x + 0.1, yT, z]);
+      else { const x2 = nearCap(x), d2 = pick(); pts.push([x2, 1.58, z], ...capSeg(x2, z, 1.6, d2), [x2 + d2 * 0.55, yT, z]); }
+      const P = mkPath(pts);
+      flowC.add(P, 0.6, cLiq, cLight, P.cum[1], 1);
+    }
+    let tVap = 0, tLiq = 0, tBoil = 0;
+    function stepTray(dt) {
+      tVap -= dt; while (tVap <= 0) { tVap += 0.14; spawnVapor(); }
+      tLiq -= dt; while (tLiq <= 0) { tLiq += 0.2; spawnLiquid(); }
+      tBoil -= dt; while (tBoil <= 0) { tBoil += 0.45; spawnBoil(); }
+      flowC.update(dt);
+    }
+    for (let i = 0; i < 260; i++) stepTower(0.05);   // open with oil already flowing
+    for (let i = 0; i < 400; i++) stepTray(0.05);
+
+    // ---------- hotspots + labels ----------
+    const ANCH = {
+      tower: [[-3.35, -0.3, Z + 0.72], [-0.75, 1.4, -0.4], [0.45, ty(7) + 0.04, -0.03], [-0.14, ty(9) + 0.15, -0.42], [side(4) * D, ty(4) - 0.18, -0.25], [2.1, ty(5) + 0.12, Z],
+        [2.9, 12.65, Z + 0.34], [3.4, 11.0, Z + 0.42], [-1.7, 0.2, Z], [2.0, -1.45, -0.2], [-(R + RI) / 2, 9.75, 0.02], [wp.x, wy + 0.52, wp.z]],
+      tray: [[0, -0.5, -0.05], [-0.7, 0.26, -0.03], [0.7, 0.5, -0.2], [1.67, 0.155, -0.06], [-1.05, 0.2, 0.01], [DC, 0.33, -0.45], [2.3, -0.4, -0.55], [-2.3, 1.0, -0.55], [-1.95, -0.15, 0.01], [DXo, -0.6, DZ]]
+    };
+    const TAGS = {
+      tower: [['crude', [-4.85, -1.3, Z], 'd', 'bitumen'], ['steam', [-2.2, 0.2, Z], 'u', 'neutral'], ['gas', [4.95, 11.95, Z], 'r', 'gas'], ['petrol', [4.95, 9.7, Z], 'r', 'petrol'],
+        ['naphtha', [3.4, ty(11) - 0.25, Z], 'r', 'naphtha'], ['kerosene', [3.4, ty(8) - 0.25, Z], 'r', 'kerosene'], ['diesel', [3.4, ty(5) - 0.25, Z], 'r', 'diesel'], ['fueloil', [3.4, ty(2) - 0.25, Z], 'r', 'fueloil'], ['bitumen', [3.45, -1.45, -0.3], 'r', 'bitumen']],
+      tray: [['upper', [-0.4, 2.0, -1.95], 'r'], ['lower', [-0.4, 0.4, -1.95], 'r'], ['draw', [DXo, -1.0, DZ], 'r', 'kerosene']]
+    };
+    let hsEls = [], tagEls = [];
+    function buildOverlay() {
+      overlay.innerHTML = '';
+      const x = t();
+      hsEls = ANCH[view].map((p, i) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'hs'; b.textContent = String(i + 1);
+        b.setAttribute('aria-label', x.parts[view][i][0]);
+        b.setAttribute('aria-pressed', String(selected === i));
+        b.addEventListener('click', e => { e.stopPropagation(); select(i); });
+        overlay.append(b);
+        return { el: b, v: V(p[0], p[1], p[2]) };
+      });
+      tagEls = TAGS[view].map(([id, p, al, sw]) => {
+        const d = document.createElement('span');
+        d.className = 'tag3d' + (id === 'crude' || id === 'steam' ? ' opt' : '');
+        const [main, extra] = x.tags[id].split(' · ');
+        d.innerHTML = (sw ? `<span class="sw f-${sw}"></span>` : '') + `<span>${main}</span>` + (extra ? `<span class="tmp">· ${extra}</span>` : '');
+        overlay.append(d);
+        return { el: d, v: V(p[0], p[1], p[2]), al };
+      });
+    }
+
+    // ---------- camera ----------
+    const FIT = {
+      tower: { w: 12.8, h: 16.8, target: [-0.1, 5.4, -0.2], yaw: 0.25, pitch: 0.12 },
+      tray: { w: 6.0, h: 3.9, target: [-0.35, 0.55, -0.5], yaw: -0.3, pitch: 0.2 }
+    };
+    const camS = { tower: { yaw: FIT.tower.yaw, pitch: FIT.tower.pitch, zoom: 1, touched: false }, tray: { yaw: FIT.tray.yaw, pitch: FIT.tray.pitch, zoom: 1, touched: false } };
+    let W = 1, Hh = 1;
+    // fit the model, keeping room on the right for the product labels (a fixed number of pixels)
+    function fitDist(f, m) { const vf = Math.tan(T3.MathUtils.degToRad(camera.fov) / 2); return Math.max(f.h / 2 / vf, f.w / (1 - m / W) / 2 / (vf * camera.aspect)); }
+    function clampCam() {
+      const c = camS[view], lim = view === 'tray' ? 1.3 : (cut ? 1.45 : Infinity);
+      c.yaw = Math.max(-lim, Math.min(lim, c.yaw));
+      const pl = view === 'tray' ? [0.02, 1.25] : [-0.25, 1.15];
+      c.pitch = Math.max(pl[0], Math.min(pl[1], c.pitch));
+    }
+    function updateCamera() {
+      const f = FIT[view], c = camS[view], m = view === 'tower' ? (W < 480 ? 70 : 100) : 0;
+      const d0 = fitDist(f, m), d = d0 * c.zoom;
+      const vis = 2 * d0 * Math.tan(T3.MathUtils.degToRad(camera.fov) / 2) * camera.aspect;
+      const s = Math.max(0, f.w / 2 + m * vis / W - vis / 2);   // slide the model left just enough
+      const tg = [f.target[0] + s * Math.cos(c.yaw), f.target[1], f.target[2] - s * Math.sin(c.yaw)];
+      camera.position.set(tg[0] + d * Math.sin(c.yaw) * Math.cos(c.pitch), tg[1] + d * Math.sin(c.pitch), tg[2] + d * Math.cos(c.yaw) * Math.cos(c.pitch));
+      camera.lookAt(tg[0], tg[1], tg[2]);
+      camera.updateMatrixWorld();
+    }
+    let drag = null;
+    stage.addEventListener('pointerdown', e => {
+      if (e.target.closest('button')) return;
+      drag = { x: e.clientX, y: e.clientY };
+      try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+      stage.classList.add('dragging');
+      camS[view].touched = true;
+    });
+    stage.addEventListener('pointermove', e => {
+      if (!drag) return;
+      const c = camS[view];
+      c.yaw -= (e.clientX - drag.x) * 0.008; c.pitch += (e.clientY - drag.y) * 0.005;
+      drag.x = e.clientX; drag.y = e.clientY;
+      clampCam();
+      if (!running) frame(performance.now());
+    });
+    const endDrag = () => { drag = null; stage.classList.remove('dragging'); };
+    stage.addEventListener('pointerup', endDrag);
+    stage.addEventListener('pointercancel', endDrag);
+    stage.addEventListener('keydown', e => {
+      const c = camS[view];
+      if (e.key === 'ArrowLeft') c.yaw += 0.12; else if (e.key === 'ArrowRight') c.yaw -= 0.12;
+      else if (e.key === 'ArrowUp') c.pitch += 0.08; else if (e.key === 'ArrowDown') c.pitch -= 0.08;
+      else if (e.key === '+' || e.key === '=') c.zoom = Math.max(0.4, c.zoom * 0.84);
+      else if (e.key === '-') c.zoom = Math.min(1.6, c.zoom * 1.19);
+      else return;
+      e.preventDefault(); c.touched = true; clampCam();
+    });
+
+    // ---------- overlay placement ----------
+    const tmpV = new T3.Vector3(), dirV = new T3.Vector3(), ray = new T3.Raycaster();
+    function placeOverlay(checkOcc) {
+      const occ = view === 'tower' ? (cut ? occBack : occBack.concat(occFront)) : occC;
+      hsEls.forEach(h => {
+        tmpV.copy(h.v).project(camera);
+        const x = (tmpV.x + 1) / 2 * W, y = (1 - tmpV.y) / 2 * Hh;
+        h.el.style.visibility = (tmpV.z > 1 || x < -20 || x > W + 20 || y < -20 || y > Hh + 20) ? 'hidden' : 'visible';
+        h.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+        if (checkOcc) {
+          dirV.subVectors(h.v, camera.position);
+          const dist = dirV.length();
+          ray.set(camera.position, dirV.normalize()); ray.far = dist - 0.1;
+          h.el.classList.toggle('is-occ', ray.intersectObjects(occ, false).length > 0);
+        }
+      });
+      tagEls.forEach(g => {
+        tmpV.copy(g.v).project(camera);
+        const x = (tmpV.x + 1) / 2 * W, y = (1 - tmpV.y) / 2 * Hh;
+        const shift = g.al === 'l' ? 'translate(calc(-100% - 8px),-50%)' : g.al === 'u' ? 'translate(-50%,calc(-100% - 8px))' : g.al === 'd' ? 'translate(-50%,10px)' : 'translate(8px,-50%)';
+        g.el.style.visibility = tmpV.z > 1 ? 'hidden' : 'visible';
+        g.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) ${shift}`;
+      });
+    }
+
+    // ---------- highlight the selected part ----------
+    function resetHighlight() {
+      ['tower', 'tray'].forEach(vk => Object.values(partMats[vk]).forEach(list => list.forEach(m => { m.emissive.setHex(m.userData.e0); m.emissiveIntensity = m.userData.ei; })));
+    }
+    function pulse(time) {
+      if (selected == null) return;
+      const list = partMats[view][selected];
+      if (!list) return;
+      const k = 0.3 + 0.22 * Math.sin(time * 5);
+      list.forEach(m => { m.emissive.setHex(0xff6a1a); m.emissiveIntensity = k; });
+    }
+
+    // ---------- loop ----------
+    let running = false, raf = 0, lastT = 0, time = 0, frameN = 0;
+    function frame(ts) {
+      const dt = lastT ? Math.min(0.05, (ts - lastT) / 1000) : 0;
+      lastT = ts; time += dt;
+      const c = camS[view];
+      if (!c.touched && !reduce) c.yaw = FIT[view].yaw + 0.3 * Math.sin(time * 0.35);
+      if (flowOn) { if (view === 'tower') stepTower(dt); else stepTray(dt); mFire.emissiveIntensity = 1.15 + 0.25 * Math.sin(time * 13) * Math.sin(time * 7.3); }
+      updateCamera();
+      pulse(time);
+      renderer.render(scene, camera);
+      placeOverlay(frameN++ % 6 === 0);
+    }
+    function loop(ts) { if (!running) return; frame(ts); raf = requestAnimationFrame(loop); }
+    function start() { if (running) return; running = true; lastT = 0; raf = requestAnimationFrame(loop); }
+    function stop() { running = false; cancelAnimationFrame(raf); }
+    function resize() {
+      const r = stage.getBoundingClientRect();
+      W = Math.max(1, r.width); Hh = Math.max(1, r.height);
+      stage.classList.toggle('narrow', W < 480);
+      renderer.setSize(W, Hh, false);
+      camera.aspect = W / Hh; camera.updateProjectionMatrix();
+      if (!running) { lastT = 0; frame(performance.now()); }
+    }
+    if (window.ResizeObserver) new ResizeObserver(resize).observe(stage); else window.addEventListener('resize', resize);
+    if (window.IntersectionObserver) new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? start() : stop()), { rootMargin: '120px' }).observe(stage);
+    else start();
+
+    buildOverlay();
+    resize();
+
+    return {
+      setView() { tower.visible = view === 'tower'; trayG.visible = view === 'tray'; resetHighlight(); buildOverlay(); clampCam(); if (!running) { lastT = 0; frame(performance.now()); } },
+      setCut() { frontG.visible = !cut; cutOnly.visible = cut; clampCam(); frameN = 0; if (!running) { lastT = 0; frame(performance.now()); } },
+      reset() { const c = camS[view]; c.yaw = FIT[view].yaw; c.pitch = FIT[view].pitch; c.zoom = 1; c.touched = false; },
+      zoom(f) { const c = camS[view]; c.zoom = Math.max(0.4, Math.min(1.6, c.zoom * f)); },
+      relabel() { buildOverlay(); },
+      onSelect() { resetHighlight(); hsEls.forEach((h, i) => h.el.setAttribute('aria-pressed', String(selected === i))); },
+      init() { frontG.visible = !cut; cutOnly.visible = cut; }
+    };
+  }
+
+  try { if (window.THREE) { G = createEngine(); G.init(); } } catch (err) { G = null; }
+  const showNoGL = () => { overlay.innerHTML = `<p class="no-gl-msg">${t().noGL}</p>`; };
+  if (!G) { stage.classList.add('no-gl'); showNoGL(); }
+  document.addEventListener('fdl:lang', () => { renderPanel(); setFlowLabel(); if (G) G.relabel(); else showNoGL(); });
+  renderPanel();
+  setFlowLabel();
+})();
+</script>
