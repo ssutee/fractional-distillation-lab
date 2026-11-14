@@ -55,3 +55,9 @@ This is a simplified model for Grade 6. The tray temperatures (30, 120, 180, 260
 ## Built with
 
 Plain HTML, CSS and JavaScript with no build tools. The 2D lab is drawn in SVG, the 3D model uses [Three.js](https://threejs.org/) r128 from cdnjs, and the type is set in Google Fonts (Bricolage Grotesque, Lexend, IBM Plex Mono, Anuphan and IBM Plex Sans Thai Looped).
+
+## License
+
+The lab is released under the [MIT License](LICENSE). You are free to use, copy, change and share it, including in your own classes and websites, as long as you keep the copyright notice.
+
+Three.js (MIT License) and the fonts (SIL Open Font License) are loaded from their CDNs and keep their own licenses.
