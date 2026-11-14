@@ -33,7 +33,8 @@ This is a simplified model for Grade 6. The tray temperatures (30, 120, 180, 260
 | --- | --- |
 | `index.html` | The page GitHub Pages serves. It is built from `fractional-distillation.html`, so don't edit it by hand. |
 | `fractional-distillation.html` | The source of the lab. It is also published as a Claude artifact, which adds its own page wrapper. |
-| `build-index.py` | Wraps the source in a complete HTML document and writes `index.html`. |
+| `build-index.py` | Wraps the source in a complete HTML document, adds the link-preview tags, and writes `index.html`. |
+| `social-preview.png` | The 1280×640 card shown when the live link or the repository is shared. |
 
 ## Editing the lab
 
