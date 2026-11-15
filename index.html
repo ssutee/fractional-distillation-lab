@@ -33,7 +33,8 @@ img{max-width:100%}
   --hot:#e8590c; --cool:#1f84c9; --cool-soft:#dcecf8; --cool-text:#0f5a8e; --focus:#1f84c9;
   --good:#2b8a3e; --good-soft:#dcf2e1; --bad:#c92a2a; --bad-soft:#fde2e2;
   --steel:#a3b1b9; --steel-dark:#5b6b75; --pipe-hi:#dbe3e7; --furnace:#34414a; --firebox:#140d08; --crude:#1c1611; --on-dark:#ffffff;
-  --col-cool:#e6f2fa; --col-hot:#ffcfb0; --stage-hi:#f8fafb; --stage-lo:#d4dde2; --flame-a:#ff7a1a; --flame-b:#ffd166;
+  --col-cool:#e6f2fa; --col-hot:#ffcfb0; --stage-hi:#f8fafb; --stage-lo:#d4dde2;
+  --atom-c:#2f3b44; --atom-c-ink:#ffffff; --atom-h:#ffffff; --atom-h-ink:#13202a; --bond:#6b7a84; --flame-a:#ff7a1a; --flame-b:#ffd166;
   --f-gas:#8ec5e6; --f-petrol:#f2cf3d; --f-naphtha:#eea83a; --f-kerosene:#df7b26; --f-diesel:#b4541c; --f-fueloil:#7c3a17; --f-bitumen:#2b1c14;
   --bead-stroke:rgba(19,32,42,.55);
   --font-display:"Bricolage Grotesque","Anuphan","Avenir Next","Segoe UI",system-ui,sans-serif;
@@ -48,6 +49,7 @@ img{max-width:100%}
     --good:#69db7c; --good-soft:#163222; --bad:#ff8787; --bad-soft:#3a1a1a;
     --steel:#4c5d67; --steel-dark:#8a9ba5; --pipe-hi:#6b7d87; --furnace:#253037;
     --col-cool:#132a37; --col-hot:#4a2512; --stage-hi:#283b46; --stage-lo:#0c1316;
+    --atom-c:#d3dce1; --atom-c-ink:#10181c; --atom-h:#1f2c32; --atom-h-ink:#e7eef1; --bond:#8a9ba5;
     --f-gas:#a5d8f5; --f-petrol:#f6da62; --f-naphtha:#f3b553; --f-kerosene:#ea8d40; --f-diesel:#cc6c35; --f-fueloil:#a45a33; --f-bitumen:#5b4132;
     --bead-stroke:rgba(231,238,241,.5);
     color-scheme:dark;
@@ -60,6 +62,7 @@ img{max-width:100%}
   --good:#69db7c; --good-soft:#163222; --bad:#ff8787; --bad-soft:#3a1a1a;
   --steel:#4c5d67; --steel-dark:#8a9ba5; --pipe-hi:#6b7d87; --furnace:#253037;
   --col-cool:#132a37; --col-hot:#4a2512; --stage-hi:#283b46; --stage-lo:#0c1316;
+    --atom-c:#d3dce1; --atom-c-ink:#10181c; --atom-h:#1f2c32; --atom-h-ink:#e7eef1; --bond:#8a9ba5;
   --f-gas:#a5d8f5; --f-petrol:#f6da62; --f-naphtha:#f3b553; --f-kerosene:#ea8d40; --f-diesel:#cc6c35; --f-fueloil:#a45a33; --f-bitumen:#5b4132;
   --bead-stroke:rgba(231,238,241,.5);
   color-scheme:dark;
@@ -352,6 +355,77 @@ html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[
 .pl-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 .pl-n{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font:600 .75rem/1 var(--font-mono)}
 
+/* hydrocarbons */
+.hc-atoms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:700px){.hc-atoms{grid-template-columns:minmax(0,1fr)}}
+.hc-atom{display:flex;gap:16px;align-items:center}
+.hc-atom-svg{width:72px;height:72px;flex:none}
+.hc-atom > div{display:grid;gap:4px;min-width:0}
+.hc-atom p{color:var(--ink-soft);font-size:.95rem}
+.bondg line,.bondg polyline,.bondg polygon{fill:none;stroke:var(--bond);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.atom-c{fill:var(--atom-c)}
+.atom-h{fill:var(--atom-h);stroke:var(--bond);stroke-width:1.5}
+.atom-c-t,.atom-h-t{font-family:var(--font-display);font-weight:700;font-size:15px;text-anchor:middle}
+.atom-c-t{fill:var(--atom-c-ink)}
+.atom-h-t{fill:var(--atom-h-ink);font-size:13px}
+.hc-lab{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:26px;align-items:start}
+@media (max-width:900px){.hc-lab{grid-template-columns:minmax(0,1fr)}}
+.hc-left,.hc-right{display:grid;gap:14px;min-width:0;align-content:start}
+.hc-ctl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:center}
+.hc-ctl label{font-family:var(--font-display);font-weight:700;font-size:1.1rem}
+.hc-stepper{display:flex;align-items:center;gap:8px}
+.hc-step{width:44px;height:44px;padding:0;justify-content:center;font-size:1.3rem}
+.hc-step:disabled{opacity:.4;cursor:default}
+#hcOut{font:600 1.8rem/1 var(--font-mono);min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
+#hcN{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+.hc-mol{overflow-x:auto;padding:8px 0;border-radius:12px;background:var(--surface-2)}
+.hc-mol-svg{display:block;margin:0 auto}
+.hc-count{font-size:.9rem;color:var(--ink-soft)}
+.hc-info{display:grid;gap:12px}
+.hc-name{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.hc-big{font-family:var(--font-display);font-weight:800;font-size:1.8rem;line-height:1.15}
+.hc-formula{font:600 1.35rem var(--font-mono);color:var(--accent-text)}
+.hc-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px;margin:0}
+.hc-facts .wide{grid-column:1/-1}
+.hc-facts dt{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+html[lang="th"] .hc-facts dt{letter-spacing:0}
+.hc-facts dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.state{font:600 .78rem var(--font-mono);padding:3px 10px;border-radius:999px}
+.state.gas{background:var(--cool-soft);color:var(--cool-text)}
+.state.liquid{background:var(--accent-soft);color:var(--accent-text)}
+.state.solid{background:var(--surface-2);color:var(--ink)}
+.hc-fact{font-size:.95rem;color:var(--ink-soft)}
+.hc-fact b{color:var(--ink)}
+.hc-right h3{font-size:1.15rem}
+.hc-chart{position:relative}
+.hc-chart svg{display:block;width:100%;height:auto;cursor:crosshair;touch-action:pan-y}
+.hc-chart .grid{stroke:var(--line);stroke-width:1}
+.hc-chart .tick{font:500 11px var(--font-mono);fill:var(--ink-soft)}
+.hc-chart .axis-t{font:500 12px var(--font-body);fill:var(--ink-soft)}
+.hc-chart .band-hot{fill:var(--hot);opacity:.12}
+.hc-chart .ref{stroke:var(--cool);stroke-width:1.5}
+.hc-chart .ref-t{font:600 11px var(--font-body)}
+.hc-chart .ref-t.hot{fill:var(--accent-text)}
+.hc-chart .ref-t.cool{fill:var(--cool-text)}
+.hc-chart .line{fill:none;stroke:var(--ink-soft);stroke-width:2;opacity:.45}
+.hc-chart .dot{fill:var(--fc);stroke:var(--surface);stroke-width:2}
+.hc-chart .strip{fill:var(--fc)}
+.hc-chart .sel{fill:none;stroke:var(--accent);stroke-width:2.5}
+.hc-chart .sel-t{font:600 12px var(--font-mono);fill:var(--ink)}
+.hc-chart .hov{fill:none;stroke:var(--ink);stroke-width:1.5}
+.hc-tip{position:absolute;left:0;top:0;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.82rem;line-height:1.45;box-shadow:0 4px 14px rgba(0,0,0,.18);white-space:nowrap;z-index:2}
+.hc-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem;color:var(--ink-soft);margin:0}
+.hc-legend > span{display:inline-flex;align-items:center;gap:6px}
+.hc-legend .sw{width:12px;height:12px}
+.hc-note{font-size:.9rem;color:var(--ink-soft)}
+.two.hc-two{padding-top:0}
+.hc-two svg{display:block;width:100%;max-width:440px;height:auto}
+.sp{fill:none;stroke:var(--fc);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.sp-div{stroke:var(--line);stroke-width:1}
+.ring-c{fill:var(--atom-c)}
+.hc-cap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:440px;font-size:.88rem;color:var(--ink-soft);text-align:center}
+.hc-cap.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+
 @media (prefers-reduced-motion: reduce){
   .hs{transition:none}
   .flicker path,.steam,[data-part].lit{animation:none}
@@ -507,6 +581,71 @@ html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[
           <div><dt data-i18n="rf6.v">10+ pools</dt><dd data-i18n="rf6.d">of crude oil a day through a big tower, counted in Olympic swimming pools</dd></div>
         </dl>
       </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="hc-h">
+    <header>
+      <h2 id="hc-h" data-i18n="hc.h">What is a hydrocarbon?</h2>
+      <p data-i18n="hc.p">Almost everything in crude oil is a hydrocarbon: a molecule built from only two kinds of atoms, carbon and hydrogen. Build one below and see how its size decides where it ends up in the tower.</p>
+    </header>
+    <div class="hc-atoms">
+      <div class="card hc-atom">
+        <svg class="hc-atom-svg" viewBox="0 0 80 80" aria-hidden="true"><g class="bondg"><line x1="40" y1="6" x2="40" y2="74"/><line x1="6" y1="40" x2="74" y2="40"/></g><circle class="atom-c" cx="40" cy="40" r="17"/><text class="atom-c-t" x="40" y="46">C</text></svg>
+        <div><h3 data-i18n="hc.c.h">Carbon (C)</h3><p data-i18n="hc.c.p">A carbon atom always makes 4 bonds, as if it had 4 hands. Carbon atoms hold hands with each other to build a chain.</p></div>
+      </div>
+      <div class="card hc-atom">
+        <svg class="hc-atom-svg" viewBox="0 0 80 80" aria-hidden="true"><g class="bondg"><line x1="6" y1="40" x2="40" y2="40"/></g><circle class="atom-h" cx="46" cy="40" r="15"/><text class="atom-h-t" x="46" y="45">H</text></svg>
+        <div><h3 data-i18n="hc.h.h">Hydrogen (H)</h3><p data-i18n="hc.h.p">A hydrogen atom makes just 1 bond, as if it had 1 hand. Hydrogen atoms fill every free hand on the carbon chain.</p></div>
+      </div>
+    </div>
+    <div class="card hc-lab">
+      <div class="hc-left">
+        <div class="hc-ctl">
+          <label for="hcN" data-i18n="hc.n">Carbon atoms in the chain</label>
+          <div class="hc-stepper">
+            <button type="button" class="btn hc-step" id="hcMinus" data-i18n-aria="hc.fewer" aria-label="One carbon fewer">−</button>
+            <output id="hcOut" for="hcN">8</output>
+            <button type="button" class="btn hc-step" id="hcPlus" data-i18n-aria="hc.more" aria-label="One carbon more">+</button>
+          </div>
+          <input type="range" id="hcN" min="1" max="30" step="1" value="8">
+        </div>
+        <div class="hc-mol" id="hcMol"></div>
+        <p class="hc-count" data-i18n="hc.count">Count the hydrogens: 2 on every carbon, plus 1 more at each end of the chain.</p>
+        <div class="hc-info" id="hcInfo" aria-live="polite"></div>
+      </div>
+      <div class="hc-right">
+        <h3 data-i18n="hc.chart.h">Longer chain, higher boiling point</h3>
+        <div class="hc-chart" id="hcChart"></div>
+        <p class="hc-legend" id="hcLegend"></p>
+        <p class="hc-note" data-i18n="hc.chart.note">Tap a dot to build that molecule. Every extra carbon atom raises the boiling point.</p>
+      </div>
+    </div>
+    <div class="two hc-two">
+      <article class="card">
+        <h3 data-i18n="hc.why.h">Why do long chains boil at higher temperatures?</h3>
+        <p data-i18n="hc.why.p1">Molecules pull on each other a little, like weak magnets. Short chains touch their neighbours in only a few places, so a little heat is enough to pull them apart into a gas.</p>
+        <p data-i18n="hc.why.p2">Long chains are like cooked spaghetti. They tangle and touch their neighbours all along their length, so it takes much more heat to pull them apart. That is why every extra carbon atom raises the boiling point.</p>
+        <svg viewBox="0 0 320 130" aria-hidden="true">
+          <g class="f-petrol"><polyline class="sp" points="18,34 30,26 42,34"/><polyline class="sp" points="72,22 84,30 96,22"/><polyline class="sp" points="112,46 124,38 136,46"/><polyline class="sp" points="26,82 38,90 50,82"/><polyline class="sp" points="78,70 90,62 102,70"/><polyline class="sp" points="114,100 126,108 138,100"/><polyline class="sp" points="40,114 52,106 64,114"/></g>
+          <line class="sp-div" x1="160" y1="10" x2="160" y2="120"/>
+          <g class="f-diesel"><path class="sp" d="M176,30 C206,0 226,70 256,35 S300,10 310,45"/><path class="sp" d="M180,104 C214,74 240,128 270,94 S304,80 312,110"/></g>
+          <g class="f-fueloil"><path class="sp" d="M178,70 C210,40 234,110 264,70 S300,40 312,84"/><path class="sp" d="M186,48 C230,92 252,18 304,64"/></g>
+        </svg>
+        <div class="hc-cap"><span data-i18n="hc.why.l1">Short chains: easy to pull apart</span><span data-i18n="hc.why.l2">Long chains: tangled together</span></div>
+      </article>
+      <article class="card">
+        <h3 data-i18n="hc.ring.h">Not every hydrocarbon is a straight chain</h3>
+        <p data-i18n="hc.ring.p">Crude oil also has hydrocarbons with branches and rings. They follow the same rule: bigger molecules boil at higher temperatures. This lab uses straight chains, called alkanes, because they are the easiest to count. The drawings show only the carbon atoms.</p>
+        <svg viewBox="0 0 330 100" aria-hidden="true">
+          <g class="bondg"><polyline fill="none" points="22,62 44,48 66,62 88,48"/><polyline fill="none" points="142,64 164,50 186,64 208,50"/><line x1="164" y1="50" x2="164" y2="24"/>
+            <polygon fill="none" points="275,24 298,37 298,63 275,76 252,63 252,37"/></g>
+          <g class="ring-c"><circle cx="22" cy="62" r="7"/><circle cx="44" cy="48" r="7"/><circle cx="66" cy="62" r="7"/><circle cx="88" cy="48" r="7"/>
+            <circle cx="142" cy="64" r="7"/><circle cx="164" cy="50" r="7"/><circle cx="186" cy="64" r="7"/><circle cx="208" cy="50" r="7"/><circle cx="164" cy="24" r="7"/>
+            <circle cx="275" cy="24" r="7"/><circle cx="298" cy="37" r="7"/><circle cx="298" cy="63" r="7"/><circle cx="275" cy="76" r="7"/><circle cx="252" cy="63" r="7"/><circle cx="252" cy="37" r="7"/></g>
+        </svg>
+        <div class="hc-cap three"><span data-i18n="hc.ring.l1">Chain</span><span data-i18n="hc.ring.l2">Branched</span><span data-i18n="hc.ring.l3">Ring</span></div>
+      </article>
     </div>
   </section>
 
@@ -669,6 +808,24 @@ html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[
   Object.assign(TH_ARIA, {
     'in.views':'มุมมอง', 'in.stage':'โมเดล 3 มิติของหอกลั่น ลากหรือใช้ปุ่มลูกศรเพื่อหมุน', 'in.zin':'ซูมเข้า', 'in.zout':'ซูมออก'
   });
+  Object.assign(TH_DOM, {
+    'hc.h':'ไฮโดรคาร์บอนคืออะไร?',
+    'hc.p':'สารเกือบทั้งหมดในน้ำมันดิบคือไฮโดรคาร์บอน ซึ่งเป็นโมเลกุลที่สร้างจากอะตอมเพียงสองชนิด คือ คาร์บอนและไฮโดรเจน ลองต่อโมเลกุลด้านล่าง แล้วดูว่าขนาดของโมเลกุลเป็นตัวกำหนดว่ามันจะไปอยู่ตรงไหนในหอกลั่น',
+    'hc.c.h':'คาร์บอน (C)', 'hc.c.p':'อะตอมคาร์บอนสร้างพันธะ 4 พันธะเสมอ เหมือนมี 4 มือ อะตอมคาร์บอนจับมือกันต่อเป็นโซ่',
+    'hc.h.h':'ไฮโดรเจน (H)', 'hc.h.p':'อะตอมไฮโดรเจนสร้างพันธะได้เพียง 1 พันธะ เหมือนมี 1 มือ อะตอมไฮโดรเจนจะมาจับมือที่ว่างอยู่ทุกมือบนโซ่คาร์บอน',
+    'hc.n':'จำนวนอะตอมคาร์บอนในโซ่',
+    'hc.count':'นับไฮโดรเจน: คาร์บอนทุกอะตอมมีไฮโดรเจน 2 อะตอม และมีเพิ่มอีก 1 อะตอมที่ปลายโซ่แต่ละด้าน',
+    'hc.chart.h':'โซ่ยิ่งยาว จุดเดือดยิ่งสูง',
+    'hc.chart.note':'แตะจุดบนกราฟเพื่อสร้างโมเลกุลนั้น คาร์บอนที่เพิ่มขึ้นทุกอะตอมทำให้จุดเดือดสูงขึ้น',
+    'hc.why.h':'ทำไมโซ่ยาวจึงมีจุดเดือดสูงกว่า?',
+    'hc.why.p1':'โมเลกุลดึงดูดกันเล็กน้อย เหมือนแม่เหล็กอ่อน ๆ โซ่สั้นแตะโมเลกุลข้าง ๆ เพียงไม่กี่จุด ใช้ความร้อนนิดเดียวก็ดึงให้แยกออกจากกันกลายเป็นแก๊สได้',
+    'hc.why.p2':'โซ่ยาวเหมือนเส้นสปาเกตตีที่ต้มแล้ว พันกันและแตะโมเลกุลข้าง ๆ ตลอดความยาว จึงต้องใช้ความร้อนมากกว่ามากจึงจะดึงให้แยกออกจากกันได้ นี่คือเหตุผลที่คาร์บอนที่เพิ่มขึ้นทุกอะตอมทำให้จุดเดือดสูงขึ้น',
+    'hc.why.l1':'โซ่สั้น: แยกออกจากกันง่าย', 'hc.why.l2':'โซ่ยาว: พันกันแน่น',
+    'hc.ring.h':'ไฮโดรคาร์บอนไม่ได้เป็นโซ่ตรงทุกตัว',
+    'hc.ring.p':'น้ำมันดิบยังมีไฮโดรคาร์บอนที่มีกิ่งและเป็นวงแหวนด้วย ซึ่งเป็นไปตามกฎเดียวกัน คือโมเลกุลยิ่งใหญ่ จุดเดือดยิ่งสูง ห้องทดลองนี้ใช้โซ่ตรงที่เรียกว่า แอลเคน เพราะนับอะตอมได้ง่ายที่สุด ภาพนี้แสดงเฉพาะอะตอมคาร์บอน',
+    'hc.ring.l1':'โซ่ตรง', 'hc.ring.l2':'มีกิ่ง', 'hc.ring.l3':'วงแหวน'
+  });
+  Object.assign(TH_ARIA, { 'hc.fewer':'ลดคาร์บอน 1 อะตอม', 'hc.more':'เพิ่มคาร์บอน 1 อะตอม' });
   const EN_DOM = {}, EN_ARIA = {};
   document.querySelectorAll('[data-i18n]').forEach(el => { EN_DOM[el.dataset.i18n] = el.innerHTML; });
   document.querySelectorAll('[data-i18n-aria]').forEach(el => { EN_ARIA[el.dataset.i18nAria] = el.getAttribute('aria-label'); });
@@ -1154,10 +1311,10 @@ html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[
     captionMode = 'heat';
     renderCaption();
   }
-  function startFollow(fracId) {
+  function startFollow(fracId, cFixed) {
     if (follow) endFollowView();
     selected = null; markOutlet(null);
-    const c = fracId ? randInt(FR[fracId].cMin, FR[fracId].cMax) : pickCarbon();
+    const c = cFixed || (fracId ? randInt(FR[fracId].cMin, FR[fracId].cMax) : pickCarbon());
     const m = spawn(c, true);
     follow = { m, done: false, revealed: false, log: [], status: m.boils ? 'gas' : 'liquid' };
     sim.classList.add('following');
@@ -1283,6 +1440,150 @@ html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[
   $('#ruleSmall').innerHTML = chainSVG(3, 'gas');
   $('#ruleBig').innerHTML = chainSVG(22, 'fueloil');
 
+  // ---------- hydrocarbon builder ----------
+  const HC_NAMES = {
+    en: ['', 'Methane', 'Ethane', 'Propane', 'Butane', 'Pentane', 'Hexane', 'Heptane', 'Octane', 'Nonane', 'Decane',
+      'Undecane', 'Dodecane', 'Tridecane', 'Tetradecane', 'Pentadecane', 'Hexadecane', 'Heptadecane', 'Octadecane', 'Nonadecane', 'Icosane',
+      'Henicosane', 'Docosane', 'Tricosane', 'Tetracosane', 'Pentacosane', 'Hexacosane', 'Heptacosane', 'Octacosane', 'Nonacosane', 'Triacontane'],
+    th: ['', 'มีเทน', 'อีเทน', 'โพรเพน', 'บิวเทน', 'เพนเทน', 'เฮกเซน', 'เฮปเทน', 'ออกเทน', 'โนเนน', 'เดเคน',
+      'อันเดเคน', 'โดเดเคน', 'ไตรเดเคน', 'เตตระเดเคน', 'เพนตะเดเคน', 'เฮกซะเดเคน', 'เฮปตะเดเคน', 'ออกตะเดเคน', 'โนนะเดเคน', 'ไอโคเซน',
+      'เฮนไอโคเซน', 'โดโคเซน', 'ไตรโคเซน', 'เตตระโคเซน', 'เพนตะโคเซน', 'เฮกซะโคเซน', 'เฮปตะโคเซน', 'ออกตะโคเซน', 'โนนะโคเซน', 'ไตรอะคอนเทน']
+  };
+  const HC_FACT = {
+    en: {
+      1: 'Methane is the main gas in natural gas, which heats homes and makes electricity. Cows burp out methane too!',
+      2: 'Ethane is turned into ethylene, which is used to make plastic bags and bottles.',
+      3: 'Propane is bottled gas (LPG) for cooking, barbecues and camping stoves.',
+      4: 'Butane is the gas inside lighters and camping gas cans. It is also part of LPG.',
+      8: 'Octane is famous because petrol is graded by its octane number. In this lab it collects with the naphtha.',
+      12: 'Dodecane is one of the main molecules in jet fuel.',
+      16: 'Hexadecane is also called cetane. Diesel is graded by its cetane number.'
+    },
+    th: {
+      1: 'มีเทนเป็นแก๊สหลักในแก๊สธรรมชาติ ใช้ให้ความร้อนและผลิตไฟฟ้า วัวก็เรอออกมาเป็นแก๊สมีเทนด้วย!',
+      2: 'อีเทนถูกนำไปเปลี่ยนเป็นเอทิลีน ซึ่งใช้ผลิตถุงพลาสติกและขวดพลาสติก',
+      3: 'โพรเพนคือแก๊สหุงต้ม (LPG) ที่ใช้ทำอาหาร ปิ้งย่าง และเตาตั้งแคมป์',
+      4: 'บิวเทนคือแก๊สในไฟแช็กและกระป๋องแก๊สตั้งแคมป์ และเป็นส่วนหนึ่งของแก๊สหุงต้ม',
+      8: 'ออกเทนมีชื่อเสียงเพราะน้ำมันเบนซินจัดเกรดด้วยค่าออกเทน ในห้องทดลองนี้ ออกเทนถูกเก็บรวมกับแนฟทา',
+      12: 'โดเดเคนเป็นหนึ่งในโมเลกุลหลักของน้ำมันเครื่องบิน',
+      16: 'เฮกซะเดเคนมีอีกชื่อว่า ซีเทน น้ำมันดีเซลจัดเกรดด้วยค่าซีเทน'
+    }
+  };
+  const HC_UI = {
+    en: {
+      hyd: 'Hydrogen atoms', total: 'Atoms in total', boils: 'Boils at', room: 'At room temperature (20°C)', ends: 'Ends up as', used: 'Used for:',
+      gas: 'Gas', liquid: 'Liquid', solid: 'Waxy solid',
+      solidNote: 'On its own it is waxy, like a candle. Mixed with the other molecules in crude oil, it flows as a thick liquid.',
+      wax: 'Long chains like this are also found in candle wax and in the oil that keeps engines running smoothly.',
+      follow: 'Follow this molecule in the tower',
+      molAria: (name, c, h) => `Structural formula of ${name}: ${c} carbon atom${c > 1 ? 's' : ''} in a row with ${h} hydrogen atoms`,
+      chartAria: 'Chart: the boiling point rises as the carbon chain gets longer, from −162°C for methane to 450°C for a chain of 30 carbon atoms.',
+      room20: 'room temperature 20°C', furnace: 'furnace 350–400°C', xLabel: 'Carbon atoms in the chain', yLabel: 'Boiling point (°C)'
+    },
+    th: {
+      hyd: 'อะตอมไฮโดรเจน', total: 'อะตอมทั้งหมด', boils: 'จุดเดือด', room: 'ที่อุณหภูมิห้อง (20°C)', ends: 'ไปอยู่ที่', used: 'ใช้ทำอะไร:',
+      gas: 'แก๊ส', liquid: 'ของเหลว', solid: 'ของแข็งคล้ายขี้ผึ้ง',
+      solidNote: 'ถ้าอยู่ตัวเดียว มันจะเป็นของแข็งคล้ายเทียนไข แต่เมื่อปนกับโมเลกุลอื่นในน้ำมันดิบ มันจะไหลเป็นของเหลวข้น ๆ',
+      wax: 'โซ่ยาว ๆ แบบนี้ยังพบในเทียนไข และในน้ำมันหล่อลื่นที่ช่วยให้เครื่องยนต์ทำงานลื่นไหล',
+      follow: 'ติดตามโมเลกุลนี้ในหอกลั่น',
+      molAria: (name, c, h) => `สูตรโครงสร้างของ${name}: คาร์บอน ${c} อะตอมเรียงกัน กับไฮโดรเจน ${h} อะตอม`,
+      chartAria: 'กราฟ: จุดเดือดสูงขึ้นเมื่อโซ่คาร์บอนยาวขึ้น ตั้งแต่ −162°C ของมีเทน ไปจนถึง 450°C ของโซ่ที่มีคาร์บอน 30 อะตอม',
+      room20: 'อุณหภูมิห้อง 20°C', furnace: 'เตาเผา 350–400°C', xLabel: 'จำนวนอะตอมคาร์บอนในโซ่', yLabel: 'จุดเดือด (°C)'
+    }
+  };
+  const hcInput = $('#hcN'), hcOut = $('#hcOut'), hcMol = $('#hcMol'), hcInfo = $('#hcInfo'), hcChart = $('#hcChart'), hcLegend = $('#hcLegend');
+  const hcMinus = $('#hcMinus'), hcPlus = $('#hcPlus');
+  let hcN = 8;
+  const formula = n => `C${n > 1 ? `<sub>${n}</sub>` : ''}H<sub>${2 * n + 2}</sub>`;
+
+  // Structural formula: carbons in a row, a hydrogen above and below each one, and one at each end
+  function structSVG(n, label) {
+    const s = 44, r = 14, px = 30, W = px * 2 + s * (n + 1), Hh = s * 2 + 40, cy = Hh / 2, cx = i => px + s * (i + 1);
+    const atomH = (x, y) => `<circle class="atom-h" cx="${x}" cy="${y}" r="${r - 2}"/><text class="atom-h-t" x="${x}" y="${y + 4.5}">H</text>`;
+    let bonds = `<line x1="${px}" y1="${cy}" x2="${cx(n - 1) + s}" y2="${cy}"/>`, atoms = atomH(px, cy) + atomH(cx(n - 1) + s, cy);
+    for (let i = 0; i < n; i++) {
+      bonds += `<line x1="${cx(i)}" y1="${cy - s}" x2="${cx(i)}" y2="${cy + s}"/>`;
+      atoms += atomH(cx(i), cy - s) + atomH(cx(i), cy + s);
+    }
+    for (let i = 0; i < n; i++) atoms += `<circle class="atom-c" cx="${cx(i)}" cy="${cy}" r="${r}"/><text class="atom-c-t" x="${cx(i)}" y="${cy + 5}">C</text>`;
+    return `<svg class="hc-mol-svg" viewBox="0 0 ${W} ${Hh}" width="${W}" height="${Hh}" role="img" aria-label="${label}"><g class="bondg">${bonds}</g>${atoms}</svg>`;
+  }
+
+  // Boiling point vs chain length (one series; dots coloured by the fraction they end up in)
+  const CH = { W: 440, H: 300, L: 50, R: 14, T: 16, B: 52 };
+  const CPW = CH.W - CH.L - CH.R, CPH = CH.H - CH.T - CH.B;
+  const cxN = n => CH.L + (n - 1) / 29 * CPW;
+  const cyT = t => CH.T + (500 - t) / 700 * CPH;
+  function chartSVG(n) {
+    const u = HC_UI[lang], step = CPW / 29;
+    let g = '';
+    for (let t = -200; t <= 500; t += 100) g += `<line class="grid" x1="${CH.L}" x2="${CH.W - CH.R}" y1="${cyT(t)}" y2="${cyT(t)}"/><text class="tick" x="${CH.L - 6}" y="${cyT(t) + 4}" text-anchor="end">${t < 0 ? '−' + (-t) : t}</text>`;
+    g += `<rect class="band-hot" x="${CH.L}" y="${cyT(400)}" width="${CPW}" height="${cyT(350) - cyT(400)}"/><text class="ref-t hot" x="${CH.L + 6}" y="${cyT(400) - 5}">${u.furnace}</text>`;
+    g += `<line class="ref" x1="${CH.L}" x2="${CH.W - CH.R}" y1="${cyT(20)}" y2="${cyT(20)}"/><text class="ref-t cool" x="${CH.W - CH.R - 4}" y="${cyT(20) - 6}" text-anchor="end">${u.room20}</text>`;
+    ORDER.forEach(id => {
+      const f = FR[id], x1 = cxN(f.cMin) - step / 2, x2 = cxN(f.cMax) + step / 2;
+      g += `<rect class="strip f-${id}" x="${(x1 + 1).toFixed(1)}" y="${CH.T + CPH + 6}" width="${(x2 - x1 - 2).toFixed(1)}" height="6" rx="2"/>`;
+    });
+    [1, 5, 10, 15, 20, 25, 30].forEach(k => { g += `<text class="tick" x="${cxN(k)}" y="${CH.T + CPH + 28}" text-anchor="middle">${k}</text>`; });
+    g += `<text class="axis-t" x="${CH.L + CPW / 2}" y="${CH.H - 4}" text-anchor="middle">${u.xLabel}</text>`;
+    g += `<text class="axis-t" transform="translate(13 ${CH.T + CPH / 2}) rotate(-90)" text-anchor="middle">${u.yLabel}</text>`;
+    const pts = [];
+    for (let k = 1; k <= 30; k++) pts.push(`${cxN(k).toFixed(1)},${cyT(BP[k]).toFixed(1)}`);
+    g += `<polyline class="line" points="${pts.join(' ')}"/>`;
+    for (let k = 1; k <= 30; k++) g += `<circle class="dot f-${fracOf(k)}" cx="${cxN(k).toFixed(1)}" cy="${cyT(BP[k]).toFixed(1)}" r="4.5"/>`;
+    const sx = cxN(n), sy = cyT(BP[n]), right = n > 20;
+    g += `<circle class="sel" cx="${sx}" cy="${sy}" r="9"/><text class="sel-t" x="${sx + (right ? -14 : 14)}" y="${sy - 10}" text-anchor="${right ? 'end' : 'start'}">C${n} · ${fmtT(BP[n])}</text>`;
+    g += `<circle class="hov" id="hcHov" r="8" cx="0" cy="0" visibility="hidden"/>`;
+    return `<svg viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="${u.chartAria}">${g}</svg><div class="hc-tip" id="hcTip" hidden></div>`;
+  }
+
+  function renderHC() {
+    const n = hcN, u = HC_UI[lang], name = HC_NAMES[lang][n], h = 2 * n + 2, fid = fracOf(n), f = T(fid);
+    const state = n <= 4 ? 'gas' : n <= 16 ? 'liquid' : 'solid';
+    hcInput.value = n; hcOut.textContent = n;
+    hcMinus.disabled = n <= 1; hcPlus.disabled = n >= 30;
+    hcMol.innerHTML = structSVG(n, u.molAria(name, n, h));
+    const notes = [HC_FACT[lang][n], state === 'solid' ? u.solidNote : '', n >= 20 ? u.wax : ''].filter(Boolean);
+    hcInfo.innerHTML = `
+      <div class="hc-name"><span class="hc-big">${name}</span><span class="hc-formula">${formula(n)}</span></div>
+      <dl class="hc-facts">
+        <div><dt>${u.hyd}</dt><dd>2 × ${n} + 2 = ${h}</dd></div>
+        <div><dt>${u.total}</dt><dd>${n} + ${h} = ${n + h}</dd></div>
+        <div><dt>${u.boils}</dt><dd>${fmtT(BP[n])}</dd></div>
+        <div><dt>${u.room}</dt><dd><span class="state ${state}">${u[state]}</span></dd></div>
+        <div class="wide"><dt>${u.ends}</dt><dd><span class="sw f-${fid}"></span>${f.name} · ${f.where}</dd></div>
+      </dl>
+      <div class="use">${iconSVG(FR[fid].icon)}<p><b>${u.used}</b> ${f.use}</p></div>
+      ${notes.map(t => `<p class="hc-fact">${t}</p>`).join('')}
+      <div class="btn-row"><button class="btn btn-primary" type="button" id="hcFollow">${u.follow}</button></div>`;
+    hcChart.innerHTML = chartSVG(n);
+    hcLegend.innerHTML = ORDER.map(id => `<span><span class="sw f-${id}"></span>${T(id).label}</span>`).join('');
+  }
+  function setHC(n) { hcN = clamp(Math.round(n), 1, 30); renderHC(); }
+  hcInput.addEventListener('input', () => setHC(Number(hcInput.value)));
+  hcMinus.addEventListener('click', () => setHC(hcN - 1));
+  hcPlus.addEventListener('click', () => setHC(hcN + 1));
+  hcInfo.addEventListener('click', e => {
+    if (!e.target.closest('#hcFollow')) return;
+    startFollow(null, hcN);
+    $('.sim-card').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  });
+  function chartN(e) {
+    const r = hcChart.querySelector('svg').getBoundingClientRect();
+    return clamp(Math.round(((e.clientX - r.left) / r.width * CH.W - CH.L) / CPW * 29) + 1, 1, 30);
+  }
+  hcChart.addEventListener('pointermove', e => {
+    const n = chartN(e), svg = hcChart.querySelector('svg'), r = svg.getBoundingClientRect(), k = r.width / CH.W;
+    const hov = $('#hcHov'), tip = $('#hcTip'), x = cxN(n), y = cyT(BP[n]);
+    hov.setAttribute('cx', x); hov.setAttribute('cy', y); hov.setAttribute('visibility', 'visible');
+    tip.innerHTML = `<b>${HC_NAMES[lang][n]}</b> · ${formula(n)}<br>${HC_UI[lang].boils} ${fmtT(BP[n])} · ${T(fracOf(n)).label}`;
+    tip.hidden = false;
+    const tx = clamp(x * k - tip.offsetWidth / 2, 0, r.width - tip.offsetWidth), ty = y * k - tip.offsetHeight - 14;
+    tip.style.transform = `translate(${tx}px,${ty < 0 ? y * k + 14 : ty}px)`;
+  });
+  hcChart.addEventListener('pointerleave', () => { const t = $('#hcTip'), h = $('#hcHov'); if (t) t.hidden = true; if (h) h.setAttribute('visibility', 'hidden'); });
+  hcChart.addEventListener('click', e => setHC(chartN(e)));
+
   // ---------- quiz ----------
   const QUIZ = [
     { a: 2,
@@ -1306,6 +1607,16 @@ html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[
       th: { q: 'โมเลกุลนี้มีคาร์บอน 12 อะตอม และมีจุดเดือด 216°C จะกลับมาเป็นของเหลวที่ไหน?',
         why: 'ถาด 340°C และ 260°C ร้อนกว่า 216°C โมเลกุลจึงยังเป็นไอ แต่ถาด 180°C เย็นกว่า จึงควบแน่นที่ถาดนั้น ซึ่งเป็นถาดที่เก็บน้ำมันก๊าด' } },
     { a: 1,
+      en: { q: 'A hydrocarbon is a molecule made of which atoms?', opts: ['Carbon and oxygen', 'Carbon and hydrogen', 'Hydrogen and oxygen'],
+        why: 'Hydro- stands for hydrogen and -carbon stands for carbon. A hydrocarbon has only these two kinds of atoms.' },
+      th: { q: 'ไฮโดรคาร์บอนเป็นโมเลกุลที่ประกอบด้วยอะตอมอะไรบ้าง?', opts: ['คาร์บอนกับออกซิเจน', 'คาร์บอนกับไฮโดรเจน', 'ไฮโดรเจนกับออกซิเจน'],
+        why: 'คำว่า ไฮโดร มาจากไฮโดรเจน และคาร์บอน มาจากคาร์บอน ไฮโดรคาร์บอนจึงมีอะตอมแค่สองชนิดนี้' } },
+    { a: 2,
+      en: { q: 'Hexane is a straight chain of 6 carbon atoms. How many hydrogen atoms does it have?', opts: ['6', '12', '14', '18'],
+        why: 'Use the rule 2 × 6 + 2 = 14. Every carbon has 2 hydrogens, plus 1 extra at each end of the chain.' },
+      th: { q: 'เฮกเซนเป็นโซ่ตรงที่มีคาร์บอน 6 อะตอม มีไฮโดรเจนกี่อะตอม?', opts: ['6', '12', '14', '18'],
+        why: 'ใช้กฎ 2 × 6 + 2 = 14 คาร์บอนทุกอะตอมมีไฮโดรเจน 2 อะตอม และมีเพิ่มอีก 1 อะตอมที่ปลายโซ่แต่ละด้าน' } },
+    { a: 1,
       en: { q: 'What do we call it when a gas cools down and turns back into a liquid?', opts: ['Evaporating', 'Condensing', 'Melting', 'Freezing'],
         why: 'Condensing is gas turning into liquid. Evaporating is the opposite: liquid turning into gas.' },
       th: { q: 'เมื่อแก๊สเย็นลงแล้วกลับมาเป็นของเหลว เรียกว่าอะไร?', opts: ['การระเหย', 'การควบแน่น', 'การหลอมเหลว', 'การแข็งตัว'],
@@ -1327,7 +1638,7 @@ html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[
     const u = L();
     if (qi >= QUIZ.length) {
       qProg.textContent = u.qDone;
-      const msg = score === QUIZ.length ? u.qPerfect : score >= 5 ? u.qGood : u.qTry;
+      const msg = score === QUIZ.length ? u.qPerfect : score >= QUIZ.length - 2 ? u.qGood : u.qTry;
       qBody.innerHTML = `<p class="q-score">${u.qScore(score, QUIZ.length)}</p><p>${msg}</p><div class="btn-row"><button class="btn btn-primary" type="button" data-q="restart">${u.qAgain}</button></div>`;
       return;
     }
@@ -1378,6 +1689,7 @@ html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[
     playBtn.textContent = playing ? L().pause : L().play;
     labelOutlets();
     renderFractionList();
+    renderHC();
     if (infoMode === 'tracker' && follow) renderTracker();
     else if (infoMode === 'fraction' && selected) showFraction(selected);
     else renderIntro();
