@@ -606,49 +606,6 @@ html[lang="th"] .hc-facts dt{letter-spacing:0}
     </div>
   </section>
 
-  <section class="section" aria-labelledby="in-h">
-    <header>
-      <h2 id="in-h" data-i18n="in.h">Inside a real tower</h2>
-      <p data-i18n="in.p">The tower at the top of the page is a simple picture. This is what a real one looks like inside, with steel trays, bubble caps and pipes. Drag the model to turn it, then try One tray up close to see how the sorting really happens.</p>
-    </header>
-    <div class="card three-card">
-      <div class="three-bar">
-        <div class="seg" role="group" data-i18n-aria="in.views" aria-label="View">
-          <button type="button" data-view="tower" aria-pressed="true" data-i18n="in.tower">Whole tower</button>
-          <button type="button" data-view="tray" aria-pressed="false" data-i18n="in.tray">One tray up close</button>
-        </div>
-        <div class="btn-row">
-          <button class="btn" type="button" id="cutBtn" aria-pressed="true" data-i18n="in.cut">Cut open</button>
-          <button class="btn" type="button" id="flowBtn">Pause flow</button>
-          <button class="btn" type="button" id="resetBtn" data-i18n="in.reset">Reset view</button>
-        </div>
-      </div>
-      <div class="three-grid">
-        <div class="stage" id="stage" tabindex="0" role="group" data-i18n-aria="in.stage" aria-label="3D model of the tower. Drag or use the arrow keys to turn it.">
-          <canvas id="c3d"></canvas>
-          <div class="overlay3d" id="overlay3d"></div>
-          <p class="stage-hint" data-i18n="in.hint">Drag to turn</p>
-          <div class="zoom"><button type="button" id="zoomIn" data-i18n-aria="in.zin" aria-label="Zoom in">+</button><button type="button" id="zoomOut" data-i18n-aria="in.zout" aria-label="Zoom out">−</button></div>
-        </div>
-        <aside class="part-panel">
-          <div class="part-info" id="partInfo" aria-live="polite"></div>
-          <ol class="part-list" id="partList"></ol>
-        </aside>
-      </div>
-      <div class="facts3d">
-        <h3 data-i18n="rf.h">A real tower by the numbers</h3>
-        <dl class="rf-grid">
-          <div><dt data-i18n="rf1.v">about 50 m</dt><dd data-i18n="rf1.d">tall, as high as a 15-storey building</dd></div>
-          <div><dt data-i18n="rf2.v">up to 10 m</dt><dd data-i18n="rf2.d">wide</dd></div>
-          <div><dt>30–50</dt><dd data-i18n="rf3.d">trays inside. This model shows 14 so you can see them.</dd></div>
-          <div><dt>3–6</dt><dd data-i18n="rf4.d">draw-off trays with a side pipe. The rest only pass vapor up and liquid down.</dd></div>
-          <div><dt>350–400°C</dt><dd data-i18n="rf5.d">hot crude oil going in near the bottom</dd></div>
-          <div><dt data-i18n="rf6.v">10+ pools</dt><dd data-i18n="rf6.d">of crude oil a day through a big tower, counted in Olympic swimming pools</dd></div>
-        </dl>
-      </div>
-    </div>
-  </section>
-
   <div class="two">
     <article class="card">
       <h2 data-i18n="rule.h">The one rule to remember</h2>
@@ -700,6 +657,49 @@ html[lang="th"] .hc-facts dt{letter-spacing:0}
     <p class="frac-ends" data-i18n="fr.top">Top of the tower · coolest</p>
     <ol class="frac-list" id="fracList"></ol>
     <p class="frac-ends" data-i18n="fr.bottom">Bottom of the tower · hottest</p>
+  </section>
+
+  <section class="section" aria-labelledby="in-h">
+    <header>
+      <h2 id="in-h" data-i18n="in.h">Inside a real tower</h2>
+      <p data-i18n="in.p">The tower at the top of the page is a simple picture. This is what a real one looks like inside, with steel trays, bubble caps and pipes. Drag the model to turn it, then try One tray up close to see how the sorting really happens.</p>
+    </header>
+    <div class="card three-card">
+      <div class="three-bar">
+        <div class="seg" role="group" data-i18n-aria="in.views" aria-label="View">
+          <button type="button" data-view="tower" aria-pressed="true" data-i18n="in.tower">Whole tower</button>
+          <button type="button" data-view="tray" aria-pressed="false" data-i18n="in.tray">One tray up close</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn" type="button" id="cutBtn" aria-pressed="true" data-i18n="in.cut">Cut open</button>
+          <button class="btn" type="button" id="flowBtn">Pause flow</button>
+          <button class="btn" type="button" id="resetBtn" data-i18n="in.reset">Reset view</button>
+        </div>
+      </div>
+      <div class="three-grid">
+        <div class="stage" id="stage" tabindex="0" role="group" data-i18n-aria="in.stage" aria-label="3D model of the tower. Drag or use the arrow keys to turn it.">
+          <canvas id="c3d"></canvas>
+          <div class="overlay3d" id="overlay3d"></div>
+          <p class="stage-hint" data-i18n="in.hint">Drag to turn</p>
+          <div class="zoom"><button type="button" id="zoomIn" data-i18n-aria="in.zin" aria-label="Zoom in">+</button><button type="button" id="zoomOut" data-i18n-aria="in.zout" aria-label="Zoom out">−</button></div>
+        </div>
+        <aside class="part-panel">
+          <div class="part-info" id="partInfo" aria-live="polite"></div>
+          <ol class="part-list" id="partList"></ol>
+        </aside>
+      </div>
+      <div class="facts3d">
+        <h3 data-i18n="rf.h">A real tower by the numbers</h3>
+        <dl class="rf-grid">
+          <div><dt data-i18n="rf1.v">about 50 m</dt><dd data-i18n="rf1.d">tall, as high as a 15-storey building</dd></div>
+          <div><dt data-i18n="rf2.v">up to 10 m</dt><dd data-i18n="rf2.d">wide</dd></div>
+          <div><dt>30–50</dt><dd data-i18n="rf3.d">trays inside. This model shows 14 so you can see them.</dd></div>
+          <div><dt>3–6</dt><dd data-i18n="rf4.d">draw-off trays with a side pipe. The rest only pass vapor up and liquid down.</dd></div>
+          <div><dt>350–400°C</dt><dd data-i18n="rf5.d">hot crude oil going in near the bottom</dd></div>
+          <div><dt data-i18n="rf6.v">10+ pools</dt><dd data-i18n="rf6.d">of crude oil a day through a big tower, counted in Olympic swimming pools</dd></div>
+        </dl>
+      </div>
+    </div>
   </section>
 
   <section class="section" aria-labelledby="w-h">
