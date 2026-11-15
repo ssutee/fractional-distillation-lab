@@ -65,8 +65,9 @@ html[lang="th"] .kicker,html[lang="th"] .status,html[lang="th"] .frac-ends,html[
 
 /* header + language switch */
 .intro{display:grid;gap:12px;padding-block:0 26px}
-.topbar{display:flex;justify-content:flex-end}
-.lang{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+/* the language switch stays in the top-right corner while the page scrolls */
+.topbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:30;display:flex;justify-content:flex-end;padding-bottom:12px;pointer-events:none}
+.lang{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--surface);border:1px solid var(--line);box-shadow:0 4px 16px rgba(0,0,0,.16);pointer-events:auto}
 .lang button{font:600 .9rem/1.2 var(--font-body);padding:7px 16px;border-radius:999px;border:0;background:transparent;color:var(--ink-soft);cursor:pointer;min-height:38px}
 .lang button:hover{color:var(--ink)}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
@@ -412,13 +413,13 @@ html[lang="th"] .hc-facts dt{letter-spacing:0}
 </style>
 
 <div class="wrap">
-  <header class="intro">
-    <div class="topbar">
-      <div class="lang" role="group" aria-label="Language / ภาษา">
-        <button type="button" data-lang="en" lang="en" aria-pressed="true">English</button>
-        <button type="button" data-lang="th" lang="th" aria-pressed="false">ไทย</button>
-      </div>
+  <div class="topbar">
+    <div class="lang" role="group" aria-label="Language / ภาษา">
+      <button type="button" data-lang="en" lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="th" lang="th" aria-pressed="false">ไทย</button>
     </div>
+  </div>
+  <header class="intro">
     <h1 data-i18n="h1">How does crude oil become petrol, jet fuel and roads?</h1>
     <p class="lede" data-i18n="lede">Crude oil comes out of the ground as a thick, black mix of many different molecules. A refinery sorts them in a tall, hot tower. The trick: <strong>each kind of molecule turns into a gas and back into a liquid at its own temperature.</strong> This sorting method is called <strong>fractional distillation</strong>.</p>
   </header>
